@@ -7,7 +7,7 @@ export const mockData = {
       city: 'Mumbai',
       state: 'Maharashtra',
       avatarFileId: null,
-      avatarUrl: 'https://picsum.photos/seed/aarav/200/200',
+      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
       primaryCraft: 'Actor',
       vouchCount: 42,
       profileViews: 1205
@@ -19,7 +19,7 @@ export const mockData = {
       city: 'Pune',
       state: 'Maharashtra',
       avatarFileId: null,
-      avatarUrl: 'https://picsum.photos/seed/priya/200/200',
+      avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
       primaryCraft: 'DOP',
       vouchCount: 89,
       profileViews: 3400
@@ -31,7 +31,7 @@ export const mockData = {
       city: 'Hyderabad',
       state: 'Telangana',
       avatarFileId: null,
-      avatarUrl: 'https://picsum.photos/seed/vikram/200/200',
+      avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
       primaryCraft: 'Editor',
       vouchCount: 15,
       profileViews: 890
@@ -43,10 +43,34 @@ export const mockData = {
       city: 'Mumbai',
       state: 'Maharashtra',
       avatarFileId: null,
-      avatarUrl: 'https://picsum.photos/seed/neha/200/200',
+      avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
       primaryCraft: 'Casting Director',
       vouchCount: 120,
       profileViews: 5600
+    },
+    {
+      $id: 'user_5',
+      name: 'Raj Malhotra',
+      headline: 'Film Director | Short Films & Music Videos',
+      city: 'Delhi',
+      state: 'Delhi',
+      avatarFileId: null,
+      avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
+      primaryCraft: 'Director',
+      vouchCount: 67,
+      profileViews: 2100
+    },
+    {
+      $id: 'user_6',
+      name: 'Anjali Rao',
+      headline: 'Choreographer | Bollywood Dance',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      avatarFileId: null,
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop',
+      primaryCraft: 'Dancer',
+      vouchCount: 95,
+      profileViews: 4200
     }
   ],
   posts: [
@@ -55,39 +79,65 @@ export const mockData = {
       userId: 'user_1',
       authorName: 'Aarav Sharma',
       authorHeadline: 'Lead Actor | Theatre & Film',
-      authorAvatar: 'https://picsum.photos/seed/aarav/200/200',
-      content: 'Just wrapped up an amazing theatre workshop in Andheri! The energy was unreal. Can\'t wait to apply these new techniques on set. 🎭✨ #Acting #MumbaiTheatre',
-      mediaUrl: 'https://picsum.photos/seed/theatre/800/600',
+      authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+      content: 'Just wrapped up an amazing theatre workshop in Andheri! The energy was unreal. Can\'t wait to apply these new techniques on set.',
+      mediaUrl: 'https://images.unsplash.com/photo-1503095396549-807759245b35?w=800&h=600&fit=crop',
       mediaType: 'image',
       applaudCount: 124,
       commentCount: 18,
-      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() // 2 hours ago
+      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
     },
     {
       $id: 'post_2',
       userId: 'user_2',
       authorName: 'Priya Patel',
       authorHeadline: 'Cinematographer | Ad Films',
-      authorAvatar: 'https://picsum.photos/seed/priya/200/200',
-      content: 'Testing out the new RED V-Raptor on a commercial shoot today. The dynamic range is absolutely insane. 🎥🔥',
-      mediaUrl: 'https://picsum.photos/seed/camera/800/600',
+      authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
+      content: 'Testing out the new RED V-Raptor on a commercial shoot today. The dynamic range is absolutely insane!',
+      mediaUrl: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=600&fit=crop',
       mediaType: 'image',
       applaudCount: 342,
       commentCount: 45,
-      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // 1 day ago
+      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     },
     {
       $id: 'post_3',
+      userId: 'user_5',
+      authorName: 'Raj Malhotra',
+      authorHeadline: 'Film Director | Short Films & Music Videos',
+      authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
+      content: 'Behind the scenes from our latest music video shoot. So proud of this team! Releasing next week.',
+      mediaUrl: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=600&fit=crop',
+      mediaType: 'image',
+      applaudCount: 256,
+      commentCount: 32,
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      $id: 'post_4',
+      userId: 'user_6',
+      authorName: 'Anjali Rao',
+      authorHeadline: 'Choreographer | Bollywood Dance',
+      authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop',
+      content: 'New dance reel dropping tomorrow! Classical meets contemporary. Stay tuned.',
+      mediaUrl: 'https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?w=800&h=600&fit=crop',
+      mediaType: 'image',
+      applaudCount: 189,
+      commentCount: 27,
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      $id: 'post_5',
       userId: 'user_3',
       authorName: 'Vikram Singh',
       authorHeadline: 'Film Editor | Premiere Pro & DaVinci',
-      authorAvatar: 'https://picsum.photos/seed/vikram/200/200',
-      content: 'Color grading a short film set in the 90s. Trying to get that perfect nostalgic film look. Any tips for emulating Kodak Portra? 🎞️',
-      mediaUrl: null,
-      mediaType: null,
-      applaudCount: 56,
-      commentCount: 12,
-      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() // 3 days ago
+      authorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
+      content: 'Color grading a short film set in the 90s. Trying to get that perfect nostalgic film look. Any tips for emulating Kodak Portra?',
+      mediaUrl: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&h=600&fit=crop',
+      mediaType: 'image',
+      applaudCount: 78,
+      commentCount: 15,
+      createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString()
     }
   ],
   jobs: [
@@ -123,6 +173,28 @@ export const mockData = {
       postedBy: 'user_2',
       createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
       status: 'open'
+    },
+    {
+      $id: 'job_4',
+      title: 'Dance Choreographer for Ad Film',
+      company: 'Leo Burnett India',
+      location: 'Mumbai, MH',
+      type: 'Commercial',
+      description: 'Seeking creative choreographer for a 30-sec commercial featuring contemporary and classical fusion.',
+      postedBy: 'user_4',
+      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'open'
+    },
+    {
+      $id: 'job_5',
+      title: 'Assistant Director for Short Film',
+      company: 'Pocket Aces',
+      location: 'Delhi, DL',
+      type: 'Short Film',
+      description: 'Looking for an enthusiastic AD for our upcoming social drama short film. Experience with tight schedules preferred.',
+      postedBy: 'user_5',
+      createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+      status: 'open'
     }
   ],
   conversations: [
@@ -131,11 +203,11 @@ export const mockData = {
       participants: ['current_user', 'user_4'],
       otherUser: {
         name: 'Neha Gupta',
-        avatarUrl: 'https://picsum.photos/seed/neha/200/200',
+        avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
         headline: 'Casting Director @ Studio9'
       },
       lastMessage: 'Hey, are you available for an audition next Tuesday?',
-      lastMessageTime: new Date(Date.now() - 15 * 60 * 1000).toISOString(), // 15 mins ago
+      lastMessageTime: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
       unreadCount: 1
     },
     {
@@ -143,11 +215,23 @@ export const mockData = {
       participants: ['current_user', 'user_2'],
       otherUser: {
         name: 'Priya Patel',
-        avatarUrl: 'https://picsum.photos/seed/priya/200/200',
+        avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
         headline: 'Cinematographer | Ad Films'
       },
       lastMessage: 'Thanks for the recommendation! The shoot went great.',
-      lastMessageTime: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+      lastMessageTime: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      unreadCount: 0
+    },
+    {
+      $id: 'conv_3',
+      participants: ['current_user', 'user_5'],
+      otherUser: {
+        name: 'Raj Malhotra',
+        avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
+        headline: 'Film Director'
+      },
+      lastMessage: 'Would love to collaborate on your next project!',
+      lastMessageTime: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
       unreadCount: 0
     }
   ],
@@ -156,27 +240,36 @@ export const mockData = {
       $id: 'notif_1',
       type: 'applaud',
       actorName: 'Priya Patel',
-      actorAvatar: 'https://picsum.photos/seed/priya/200/200',
+      actorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
       content: 'applauded your post.',
-      createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 mins ago
+      createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
       isRead: false
     },
     {
       $id: 'notif_2',
       type: 'connection',
       actorName: 'Vikram Singh',
-      actorAvatar: 'https://picsum.photos/seed/vikram/200/200',
+      actorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
       content: 'sent you a connection request.',
-      createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+      createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
       isRead: false
     },
     {
       $id: 'notif_3',
       type: 'job',
       actorName: 'Neha Gupta',
-      actorAvatar: 'https://picsum.photos/seed/neha/200/200',
+      actorAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
       content: 'posted a new casting call: Lead Actor for Indie Feature.',
-      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+      createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      isRead: true
+    },
+    {
+      $id: 'notif_4',
+      type: 'vouch',
+      actorName: 'Raj Malhotra',
+      actorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
+      content: 'vouched for your directing skills.',
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
       isRead: true
     }
   ],
@@ -190,7 +283,7 @@ export const mockData = {
     profileViews: 42,
     impressions: 156,
     vouchCount: 3,
-    avatarUrl: 'https://picsum.photos/seed/guest/200/200'
+    avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop'
   }
 };
 

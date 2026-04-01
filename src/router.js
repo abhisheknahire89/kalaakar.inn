@@ -41,6 +41,8 @@ export function navigateTo(viewId) {
   if (viewId === 'messages') import('./views/messages.js').then(m => m.initMessagesView());
   if (viewId === 'notifications') import('./views/notifications.js').then(m => m.initNotificationsView());
   if (viewId === 'settings') import('./views/settings.js').then(m => m.initSettingsView());
+  if (viewId === 'search') import('./views/search.js').then(m => m.initSearchView());
+  if (viewId === 'saved') import('./views/saved.js').then(m => m.initSavedView());
 }
 
 let routerInitialized = false;

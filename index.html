@@ -300,9 +300,142 @@
         <!-- SETTINGS VIEW -->
         <section data-view="settings" class="view hidden max-w-3xl mx-auto p-4 md:p-6">
           <h2 class="text-2xl font-poppins font-bold mb-6">Settings</h2>
-          <div class="glass-panel rounded-xl p-6">
-            <div class="text-center text-muted py-12">Settings options will appear here</div>
-            <button id="settings-logout-btn" class="btn-ghost text-red-400 w-full mt-4 border border-red-900/30">Sign Out</button>
+          <div class="glass-panel rounded-xl overflow-hidden">
+            <div class="divide-y divide-strong">
+              <a href="#profile" class="flex items-center gap-4 p-4 hover:bg-surface transition-colors">
+                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
+                  <i data-lucide="user" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-medium text-white">Edit Profile</h3>
+                  <p class="text-xs text-muted">Update your name, bio, and photo</p>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
+              </a>
+              <a href="#notifications" class="flex items-center gap-4 p-4 hover:bg-surface transition-colors">
+                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
+                  <i data-lucide="bell" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-medium text-white">Notifications</h3>
+                  <p class="text-xs text-muted">Manage notification preferences</p>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
+              </a>
+              <a href="#saved" class="flex items-center gap-4 p-4 hover:bg-surface transition-colors">
+                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
+                  <i data-lucide="bookmark" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-medium text-white">Saved Items</h3>
+                  <p class="text-xs text-muted">View your bookmarked posts and jobs</p>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
+              </a>
+              <div class="flex items-center gap-4 p-4 hover:bg-surface transition-colors cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
+                  <i data-lucide="shield" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-medium text-white">Privacy & Security</h3>
+                  <p class="text-xs text-muted">Control your privacy settings</p>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
+              </div>
+              <div class="flex items-center gap-4 p-4 hover:bg-surface transition-colors cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
+                  <i data-lucide="help-circle" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-medium text-white">Help & Support</h3>
+                  <p class="text-xs text-muted">Get help or contact us</p>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
+              </div>
+            </div>
+          </div>
+          <button id="settings-logout-btn" class="btn-ghost text-red-400 w-full mt-6 border border-red-900/30 rounded-xl py-4 hover:bg-red-900/10 transition-colors flex items-center justify-center gap-2">
+            <i data-lucide="log-out" class="w-5 h-5"></i> Sign Out
+          </button>
+          <p class="text-center text-xs text-muted mt-6">Kalakar v1.0 | Made with love in India</p>
+        </section>
+
+        <!-- SEARCH VIEW -->
+        <section data-view="search" class="view hidden max-w-3xl mx-auto p-4 md:p-6">
+          <div class="mb-6">
+            <div class="relative">
+              <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted"></i>
+              <input type="text" id="search-input" class="input-field pl-12 py-4 rounded-full text-lg" placeholder="Search talent, jobs, studios...">
+            </div>
+          </div>
+          <div class="mb-6">
+            <h3 class="text-sm text-muted mb-3 uppercase tracking-wider">Trending Searches</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="pill-tab">Actors in Mumbai</span>
+              <span class="pill-tab">DOP Freelance</span>
+              <span class="pill-tab">Short Film Auditions</span>
+              <span class="pill-tab">Music Video Editor</span>
+            </div>
+          </div>
+          <div id="search-results" class="space-y-4">
+            <h3 class="text-sm text-muted mb-3 uppercase tracking-wider">Recently Viewed</h3>
+            <div class="glass-panel rounded-xl p-4 flex items-center gap-4">
+              <img src="https://picsum.photos/seed/search1/100/100" class="w-12 h-12 rounded-full object-cover">
+              <div class="flex-1">
+                <h4 class="font-medium text-white">Priya Patel</h4>
+                <p class="text-xs text-muted">Cinematographer | Ad Films</p>
+              </div>
+              <button class="btn-ghost border border-strong rounded-full px-3 py-1 text-xs">View</button>
+            </div>
+            <div class="glass-panel rounded-xl p-4 flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center text-gold">
+                <i data-lucide="briefcase" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-medium text-white">Lead Actor for Indie Feature</h4>
+                <p class="text-xs text-muted">Phantom Films | Mumbai</p>
+              </div>
+              <button class="btn-ghost border border-strong rounded-full px-3 py-1 text-xs">View</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SAVED VIEW -->
+        <section data-view="saved" class="view hidden max-w-3xl mx-auto p-4 md:p-6">
+          <h2 class="text-2xl font-poppins font-bold mb-6">Saved Items</h2>
+          <div class="flex gap-4 border-b border-strong mb-6 overflow-x-auto hide-scrollbar">
+            <button class="tab-btn active" data-target="saved-posts">Posts</button>
+            <button class="tab-btn" data-target="saved-jobs">Jobs</button>
+            <button class="tab-btn" data-target="saved-profiles">Profiles</button>
+          </div>
+          <div id="saved-content">
+            <div class="glass-panel rounded-xl p-4 flex gap-4 mb-4">
+              <img src="https://picsum.photos/seed/saved1/200/200" class="w-20 h-20 rounded-lg object-cover">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <img src="https://picsum.photos/seed/aarav/50/50" class="w-6 h-6 rounded-full">
+                  <span class="text-sm font-medium text-white">Aarav Sharma</span>
+                </div>
+                <p class="text-xs text-muted line-clamp-2">Just wrapped up an amazing theatre workshop in Andheri! The energy was unreal...</p>
+                <span class="text-xs text-gold mt-1 inline-block">Saved 2 days ago</span>
+              </div>
+              <button class="text-gold hover:text-white">
+                <i data-lucide="bookmark" class="w-5 h-5 fill-current"></i>
+              </button>
+            </div>
+            <div class="glass-panel rounded-xl p-4 flex gap-4 mb-4">
+              <div class="w-20 h-20 rounded-lg bg-surface flex items-center justify-center text-gold">
+                <i data-lucide="briefcase" class="w-8 h-8"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-medium text-white mb-1">Lead Actor for Indie Feature</h4>
+                <p class="text-xs text-muted">Phantom Films | Mumbai, MH</p>
+                <span class="text-xs text-gold mt-1 inline-block">Saved 5 days ago</span>
+              </div>
+              <button class="text-gold hover:text-white">
+                <i data-lucide="bookmark" class="w-5 h-5 fill-current"></i>
+              </button>
+            </div>
           </div>
         </section>
 
