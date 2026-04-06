@@ -1,5 +1,4 @@
 import { listCreators } from '../api/profile.js';
-import { listFilteredPosts } from '../api/posts.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
 import { navigateTo } from '../router.js';
 

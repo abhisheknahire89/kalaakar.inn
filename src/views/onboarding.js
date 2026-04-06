@@ -1,4 +1,4 @@
-import { createCreatorProfile } from '../auth.js';
+import { createCreatorProfile, uploadAvatar } from '../auth.js';
 import { navigateTo } from '../router.js';
 import { showToast } from '../components/toast.js';
 import { trackEvent, logError } from '../observability/telemetry.js';
@@ -18,28 +18,35 @@ let profileData = {
 let onboardingViewInitialized = false;
 
 export function initOnboardingView() {
-  if (onboardingViewInitialized) return;
-  onboardingViewInitialized = true;
+  if (!onboardingViewInitialized) {
+    onboardingViewInitialized = true;
 
-  document.querySelectorAll('.next-step-btn').forEach(btn => {
-    btn.addEventListener('click', () => goToStep(currentStep + 1));
-  });
-  
-  document.querySelectorAll('.prev-step-btn').forEach(btn => {
-    btn.addEventListener('click', () => goToStep(currentStep - 1));
-  });
-
-  document.querySelectorAll('.craft-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.craft-btn').forEach(b => b.classList.remove('active'));
-      e.currentTarget.classList.add('active');
-      profileData.primaryCraft = e.currentTarget.dataset.craft;
+    document.querySelectorAll('.next-step-btn').forEach(btn => {
+      btn.addEventListener('click', () => goToStep(currentStep + 1));
     });
-  });
+    
+    document.querySelectorAll('.prev-step-btn').forEach(btn => {
+      btn.addEventListener('click', () => goToStep(currentStep - 1));
+    });
 
-  document.getElementById('complete-onboarding-btn').addEventListener('click', handleComplete);
-  
+    document.querySelectorAll('.craft-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.craft-btn').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        profileData.primaryCraft = e.currentTarget.dataset.craft;
+      });
+    });
+
+    document.getElementById('complete-onboarding-btn')?.addEventListener('click', handleComplete);
+    document.getElementById('ob-experience')?.addEventListener('input', syncExperienceLabel);
+    document.getElementById('ob-avatar')?.addEventListener('change', handleAvatarSelect);
+  }
+
+  // Reset UI state when revisiting onboarding
+  currentStep = 1;
   updateStepUI();
+  showStep(1);
+  syncExperienceLabel();
 }
 
 function goToStep(step) {
@@ -61,21 +68,28 @@ function goToStep(step) {
     profileData.yearsExperience = document.getElementById('ob-experience').value || 0;
   }
 
-  document.querySelectorAll('.onboarding-step').forEach(el => el.classList.add('hidden'));
-  document.getElementById(`onboarding-step-${step}`).classList.remove('hidden');
+  showStep(step);
   
   currentStep = step;
   updateStepUI();
 }
 
+function showStep(step) {
+  document.querySelectorAll('.onboarding-step').forEach(el => el.classList.add('hidden'));
+  document.getElementById(`onboarding-step-${step}`)?.classList.remove('hidden');
+}
+
 function updateStepUI() {
-  document.getElementById('onboarding-step-indicator').textContent = `Step ${currentStep} of ${totalSteps}`;
+  const el = document.getElementById('onboarding-step-indicator');
+  if (el) el.textContent = `Step ${currentStep} of ${totalSteps}`;
 }
 
 async function handleComplete() {
   const btn = document.getElementById('complete-onboarding-btn');
-  btn.disabled = true;
-  btn.textContent = 'Setting up...';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Setting up...';
+  }
 
   const result = await createCreatorProfile(profileData);
   
@@ -89,7 +103,40 @@ async function handleComplete() {
   } else {
     logError(result.error, { area: 'onboarding_create_profile' });
     showToast(result.error, 'error');
-    btn.disabled = false;
-    btn.textContent = 'Complete Setup ✦';
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Complete Setup ✦';
+    }
+  }
+}
+
+function syncExperienceLabel() {
+  const range = document.getElementById('ob-experience');
+  const label = document.getElementById('ob-experience-label');
+  if (!range || !label) return;
+  label.textContent = String(range.value || '0');
+}
+
+async function handleAvatarSelect(e) {
+  const file = e.target?.files?.[0];
+  if (!file) return;
+
+  const preview = document.getElementById('ob-avatar-preview');
+  try {
+    const objectUrl = URL.createObjectURL(file);
+    if (preview) preview.src = objectUrl;
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
+  } catch {
+    // ignore
+  }
+
+  try {
+    const up = await uploadAvatar(file);
+    if (!up.success) throw new Error(up.error || 'Upload failed');
+    profileData.avatarFileId = up.fileId;
+    showToast('Avatar uploaded.', 'success');
+  } catch (error) {
+    logError(error, { area: 'onboarding_avatar' });
+    showToast('Avatar upload failed. You can skip for now.', 'warning');
   }
 }

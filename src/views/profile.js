@@ -84,7 +84,10 @@ function renderProfessionalPortfolio(container, profile, posts, vouches, credits
         <div class="flex flex-col gap-3 w-full md:w-auto">
           ${!isMine ? `
             <button class="btn-gold px-12 py-4 rounded-full font-bold text-lg shadow-xl shadow-gold/20 js-hire-main" data-user-id="${escapeHtml(creatorUserId)}" data-name="${escapeHtml(profile.name)}">Hire Artist ✦</button>
-            <button class="btn-ghost border border-white/10 px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold/5 js-follow" data-user-id="${escapeHtml(creatorUserId)}">${escapeHtml(followLabel)}</button>
+            <div class="grid grid-cols-2 gap-3">
+              <button class="btn-ghost border border-white/10 px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold/5 js-follow" data-user-id="${escapeHtml(creatorUserId)}">${escapeHtml(followLabel)}</button>
+              <button class="btn-ghost border border-white/10 px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold/5 js-vouch" data-user-id="${escapeHtml(creatorUserId)}">Vouch</button>
+            </div>
           ` : `
             <button id="edit-profile-btn" class="btn-ghost border border-gold/30 text-gold px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest">Update Credentials</button>
           `}
@@ -192,6 +195,13 @@ function bindPortfolioActions(container) {
       const targetId = followBtn.getAttribute('data-user-id');
       if (!targetId) return;
       toggleFollow(followBtn, targetId);
+      return;
+    }
+
+    const vouchBtn = e.target.closest('.js-vouch');
+    if (vouchBtn) {
+      showToast('Vouches are given after completing a deal. Open a completed deal to vouch.', 'neutral');
+      navigateTo('deals-list');
       return;
     }
 

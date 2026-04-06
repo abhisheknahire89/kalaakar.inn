@@ -55,6 +55,104 @@
       </div>
     </section>
 
+    <!-- ONBOARDING VIEW -->
+    <section data-view="onboarding" class="view hidden">
+      <div class="glass-panel rounded-2xl p-6 w-full max-w-md mx-auto">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-poppins text-xl font-bold text-white">Create your profile</h2>
+          <div id="onboarding-step-indicator" class="text-xs text-muted">Step 1 of 4</div>
+        </div>
+
+        <!-- Step 1 -->
+        <div id="onboarding-step-1" class="onboarding-step">
+          <div class="text-sm text-muted mb-4">Choose your primary craft</div>
+          <div class="grid grid-cols-2 gap-3">
+            <button class="craft-btn active" data-craft="actor">🎭 Actor</button>
+            <button class="craft-btn" data-craft="director">🎬 Director</button>
+            <button class="craft-btn" data-craft="dop">📷 Cinematographer</button>
+            <button class="craft-btn" data-craft="editor">✂️ Editor</button>
+            <button class="craft-btn" data-craft="dancer">💃 Dancer</button>
+            <button class="craft-btn" data-craft="musician">🎵 Musician</button>
+          </div>
+          <div class="flex justify-end mt-6">
+            <button class="btn-gold next-step-btn px-6 py-2 rounded-full text-sm">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="onboarding-step-2" class="onboarding-step hidden">
+          <div class="text-sm text-muted mb-4">Basic details</div>
+          <div class="space-y-3">
+            <input id="ob-name" class="input-field" placeholder="Full name" required>
+            <div class="grid grid-cols-2 gap-3">
+              <input id="ob-city" class="input-field" placeholder="City">
+              <input id="ob-state" class="input-field" placeholder="State">
+            </div>
+          </div>
+          <div class="flex gap-3 justify-between mt-6">
+            <button class="btn-ghost prev-step-btn border border-strong rounded-full px-5 py-2 text-sm">Back</button>
+            <button class="btn-gold next-step-btn px-6 py-2 rounded-full text-sm">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="onboarding-step-3" class="onboarding-step hidden">
+          <div class="text-sm text-muted mb-4">Account type</div>
+          <div class="space-y-3">
+            <label class="flex items-center gap-3 glass-panel rounded-xl p-4 cursor-pointer">
+              <input type="radio" name="accountType" value="talent" checked>
+              <div>
+                <div class="font-medium text-white">Talent</div>
+                <div class="text-xs text-muted mt-1">Showcase work and get hired.</div>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 glass-panel rounded-xl p-4 cursor-pointer">
+              <input type="radio" name="accountType" value="scout">
+              <div>
+                <div class="font-medium text-white">Scout</div>
+                <div class="text-xs text-muted mt-1">Hire and collaborate with creators.</div>
+              </div>
+            </label>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-xs text-muted mb-2">
+                <span>Years of experience</span>
+                <span id="ob-experience-label" class="text-gold font-semibold">0</span>
+              </div>
+              <input id="ob-experience" type="range" min="0" max="20" value="0" class="w-full">
+            </div>
+          </div>
+          <div class="flex gap-3 justify-between mt-6">
+            <button class="btn-ghost prev-step-btn border border-strong rounded-full px-5 py-2 text-sm">Back</button>
+            <button class="btn-gold next-step-btn px-6 py-2 rounded-full text-sm">Next →</button>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div id="onboarding-step-4" class="onboarding-step hidden">
+          <div class="text-sm text-muted mb-4">Profile photo (optional)</div>
+          <div class="glass-panel rounded-xl p-4">
+            <div class="flex items-center gap-4">
+              <img id="ob-avatar-preview" src="/assets/default-avatar.svg" class="w-16 h-16 rounded-full border border-strong object-cover bg-surface" alt="Avatar preview">
+              <div class="flex-1">
+                <div class="text-sm font-medium text-white">Upload an avatar</div>
+                <div class="text-xs text-muted mt-1">Helps recruiters trust your profile.</div>
+              </div>
+              <label class="btn-ghost border border-strong rounded-full px-4 py-2 text-sm hover:border-gold hover:text-gold transition-colors cursor-pointer">
+                Choose
+                <input id="ob-avatar" type="file" class="hidden" accept="image/*">
+              </label>
+            </div>
+          </div>
+
+          <div class="flex gap-3 justify-between mt-6">
+            <button class="btn-ghost prev-step-btn border border-strong rounded-full px-5 py-2 text-sm">Back</button>
+            <button id="complete-onboarding-btn" class="btn-gold px-6 py-2 rounded-full text-sm">Complete Setup ✦</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- APP SHELL -->
     <div id="app-shell" class="hidden h-screen flex flex-col bg-void text-primary overflow-hidden">
       
@@ -144,12 +242,46 @@
     <div id="post-composer" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-end md:items-center justify-center">
       <div class="bg-void w-full md:w-[600px] md:rounded-xl border border-strong flex flex-col max-h-[90vh] animate-slide-up">
         <div class="flex justify-between items-center p-4 border-b border-strong">
-          <h3 class="font-poppins font-semibold">Post Talent Performance</h3>
+          <h3 class="font-poppins font-semibold">Create Post</h3>
           <button id="close-composer-btn" class="text-muted hover:text-white text-xl">✕</button>
         </div>
-        <div class="p-6">
-          <textarea id="post-text" class="w-full bg-transparent border border-strong rounded-xl text-white resize-none outline-none min-h-[120px] text-base p-4" placeholder="Describe the performance or role..."></textarea>
-          <button id="submit-post-btn" class="btn-gold w-full py-4 mt-6 rounded-full font-bold">Post Performance ✦</button>
+        <div class="p-4 flex-1 overflow-y-auto">
+          <div class="composer-types mb-4">
+            <button class="composer-type active" data-type="video" type="button">
+              <i data-lucide="video" class="w-4 h-4"></i> Video
+            </button>
+            <button class="composer-type" data-type="image" type="button">
+              <i data-lucide="image" class="w-4 h-4"></i> Image
+            </button>
+            <button class="composer-type" data-type="text" type="button">
+              <i data-lucide="align-left" class="w-4 h-4"></i> Text
+            </button>
+          </div>
+
+          <div id="media-picker" class="glass-panel rounded-xl p-4 mb-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="font-medium text-white">Upload</div>
+                <div id="media-hint" class="text-xs text-muted mt-1">Vertical videos perform best.</div>
+              </div>
+              <label class="btn-ghost border border-strong rounded-full px-4 py-2 text-sm hover:border-gold hover:text-gold transition-colors cursor-pointer">
+                Choose file
+                <input type="file" id="post-file" class="hidden" accept="video/*">
+              </label>
+            </div>
+
+            <div id="post-media-preview" class="hidden mt-4 rounded-lg overflow-hidden border border-strong relative">
+              <button id="remove-media-btn" type="button" class="absolute top-2 right-2 bg-black/50 rounded-full w-8 h-8 flex items-center justify-center text-white">✕</button>
+              <video id="post-video-preview" class="w-full hidden" controls playsinline></video>
+              <img id="post-image-preview" class="w-full hidden object-cover" alt="Preview">
+            </div>
+          </div>
+
+          <textarea id="post-text" class="w-full bg-transparent border border-strong rounded-xl text-white resize-none outline-none min-h-[120px] text-base p-4" placeholder="Write a caption..."></textarea>
+        </div>
+        <div class="p-4 border-t border-strong flex justify-between items-center bg-surface">
+          <div class="text-xs text-muted">Video-first ✦</div>
+          <button id="submit-post-btn" class="btn-gold px-6 py-2 rounded-full font-medium">Post ✦</button>
         </div>
       </div>
     </div>
