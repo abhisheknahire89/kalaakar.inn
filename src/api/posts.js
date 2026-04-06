@@ -44,6 +44,33 @@ export async function listFeedPosts({ limit = 10 } = {}) {
   return result.documents;
 }
 
+export async function listCreatorPosts(userId, { limit = 15 } = {}) {
+  if (!userId) return [];
+
+  const tryField = async (field) => {
+    const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.POSTS, [
+      Query.equal(field, userId),
+      Query.orderDesc('$createdAt'),
+      Query.limit(limit),
+    ]);
+    return result.documents;
+  };
+
+  try {
+    return await tryField('authorId');
+  } catch (e1) {
+    try {
+      return await tryField('userId');
+    } catch (e2) {
+      try {
+        return await tryField('creatorId');
+      } catch {
+        return [];
+      }
+    }
+  }
+}
+
 export async function uploadPostMedia(file) {
   if (!file) throw new Error('Missing file');
   const res = await storage.createFile(BUCKETS.POSTS_MEDIA, ID.unique(), file);

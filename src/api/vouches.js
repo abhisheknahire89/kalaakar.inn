@@ -1,6 +1,20 @@
 import { databases, DATABASE_ID, COLLECTIONS, ID, Query } from '../appwriteClient.js';
 import { Permission, Role } from 'appwrite';
 
+export async function listCreatorVouches(userId, { limit = 12 } = {}) {
+  if (!userId) return [];
+  try {
+    const res = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VOUCHES, [
+      Query.equal('creatorId', userId),
+      Query.orderDesc('$createdAt'),
+      Query.limit(limit),
+    ]);
+    return res.documents;
+  } catch {
+    return [];
+  }
+}
+
 export async function createVouchAndUpdateReliability({ creatorId, scoutId, dealId, rating = 5, note = '' } = {}) {
   if (!creatorId || !scoutId || !dealId) throw new Error('Missing vouch fields');
 
@@ -28,9 +42,8 @@ export async function createVouchAndUpdateReliability({ creatorId, scoutId, deal
 
     const current = Number(doc.reliabilityScore || 0);
     const next = Math.max(0, current + 1);
-    await databases.updateDocument(DATABASE_ID, COLLECTIONS.CREATORS, doc.$id, { reliabilityScore: next });
+    await databases.updateDocument(DATABASE_ID, COLLECTIONS.CREATORS, doc.$id, { reliabilityScore: next, reliability: next });
   } catch {
     // ignore
   }
 }
-

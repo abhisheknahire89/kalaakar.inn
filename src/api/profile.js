@@ -1,4 +1,4 @@
-import { databases, ID, Query, DATABASE_ID, COLLECTIONS } from './appwriteClient.js';
+import { databases, ID, Query, DATABASE_ID, COLLECTIONS } from '../appwriteClient.js';
 
 /**
  * Get a creator profile by their user ID.

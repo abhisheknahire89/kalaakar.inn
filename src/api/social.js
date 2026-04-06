@@ -1,4 +1,4 @@
-import { databases, ID, Query, DATABASE_ID, COLLECTIONS } from './appwriteClient.js';
+import { databases, ID, Query, DATABASE_ID, COLLECTIONS } from '../appwriteClient.js';
 import { currentUser } from '../app.js';
 
 /**

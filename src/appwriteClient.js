@@ -1,11 +1,11 @@
 import { Client, Account, Databases, Storage, Query, ID, OAuthProvider } from 'appwrite';
 
-const endpoint = import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1';
-const projectId = import.meta.env.VITE_APPWRITE_PROJECT || '69c8ee1b0037e381d046';
+export const APPWRITE_ENDPOINT = import.meta.env.VITE_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1';
+export const APPWRITE_PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT || '69c8ee1b0037e381d046';
 
 const client = new Client()
-  .setEndpoint(endpoint)
-  .setProject(projectId);
+  .setEndpoint(APPWRITE_ENDPOINT)
+  .setProject(APPWRITE_PROJECT_ID);
 
 export const account  = new Account(client);
 export const databases = new Databases(client);
@@ -15,7 +15,8 @@ export { client, Query, ID, OAuthProvider };
 // ═══════════════════════════════════
 // DATABASE ID
 // ═══════════════════════════════════
-export const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || 'kalakar_db';
+export const APPWRITE_DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || 'kalakar_db';
+export const DATABASE_ID = APPWRITE_DATABASE_ID;
 
 // ═══════════════════════════════════
 // ALL 17 COLLECTION IDS

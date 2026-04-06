@@ -44,7 +44,7 @@ export async function initProfileView() {
 }
 
 function renderProfessionalPortfolio(container, profile, posts, vouches) {
-  const isMine = currentUser?.$id === profile.$id;
+  const isMine = currentUser?.$id && (profile.userId || profile.$id) === currentUser.$id;
   const avatar = safeUrl(profile.avatar) || '/assets/default-avatar.svg';
   const reliability = profile.reliability || 0;
 
@@ -76,7 +76,7 @@ function renderProfessionalPortfolio(container, profile, posts, vouches) {
 
         <div class="flex flex-col gap-3 w-full md:w-auto">
           ${!isMine ? `
-            <button class="btn-gold px-12 py-4 rounded-full font-bold text-lg shadow-xl shadow-gold/20 js-hire-main" data-user-id="${profile.$id}" data-name="${escapeHtml(profile.name)}">Hire Artist ✦</button>
+            <button class="btn-gold px-12 py-4 rounded-full font-bold text-lg shadow-xl shadow-gold/20 js-hire-main" data-user-id="${escapeHtml(profile.userId || profile.$id)}" data-name="${escapeHtml(profile.name)}">Hire Artist ✦</button>
             <button class="btn-ghost border border-white/10 px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold/5">Network Follow</button>
           ` : `
             <button id="edit-profile-btn" class="btn-ghost border border-gold/30 text-gold px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest">Update Credentials</button>

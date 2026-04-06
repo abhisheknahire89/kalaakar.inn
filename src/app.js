@@ -17,6 +17,15 @@ export async function boot() {
   initRouter();
   initGlobalGuards();
 
+  // Hide splash screen helper (must never be blocked by awaits)
+  const hideSplash = () => {
+    const splash = document.getElementById('splash-screen');
+    if (splash) splash.style.display = 'none';
+  };
+
+  // Guard against stuck splash screen
+  setTimeout(hideSplash, 4000);
+
   // 1. Handle email magic-link callback first (userId/secret in query string)
   const consumed = await consumeMagicLinkFromUrl();
   if (consumed?.consumed) {
@@ -24,15 +33,6 @@ export async function boot() {
   } else if (consumed?.error) {
     showToast(consumed.error, 'error');
   }
-  
-  // 2. Hide splash screen after a short delay (or immediately if data is ready)
-  const hideSplash = () => {
-    const splash = document.getElementById('splash-screen');
-    if (splash) splash.style.display = 'none';
-  };
-  
-  // Guard against stuck splash screen
-  setTimeout(hideSplash, 4000);
 
   // 3. Check auth & profile state in one go
   const session = await checkSession();
