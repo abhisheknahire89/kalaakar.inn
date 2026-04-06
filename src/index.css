@@ -421,6 +421,17 @@ a.nav-item:active,
   pointer-events: none;
 }
 
+/* Auth screens: centered within mobile frame */
+section.view[data-view="login"],
+section.view[data-view="onboarding"] {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
 /* Bottom navigation */
 .bottom-nav { 
   height: 72px; 
