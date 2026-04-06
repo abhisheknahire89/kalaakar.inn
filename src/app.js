@@ -12,8 +12,10 @@ import { openComposer } from './domBindings.js';
 
 export let currentUser = null;
 export let currentProfile = null;
+let bootInProgress = false;
 
 export async function boot() {
+  bootInProgress = true;
   const bootStartedAt = performance.now();
   const MIN_SPLASH_MS = 1700;
   let splashHideScheduled = false;
@@ -60,12 +62,14 @@ export async function boot() {
   if (!currentUser) {
     navigateTo('login');
     initLoginView();
+    bootInProgress = false;
     return;
   }
 
   if (session.onboardingRequired) {
     navigateTo('onboarding');
     initOnboardingView();
+    bootInProgress = false;
     return;
   }
 
@@ -77,6 +81,7 @@ export async function boot() {
       actionText: 'Retry',
       onAction: () => window.location.reload(),
     });
+    bootInProgress = false;
     return;
   }
 
@@ -84,10 +89,12 @@ export async function boot() {
   try {
     await validateAppwriteMvp({ userId: currentUser.$id });
   } catch {
+    bootInProgress = false;
     return;
   }
 
   await initMainApp();
+  bootInProgress = false;
 }
 
 let mainAppInitialized = false;
@@ -182,6 +189,33 @@ function hydrateShell(user, profile) {
 function initGlobalGuards() {
   if (globalGuardsInitialized) return;
   globalGuardsInitialized = true;
+
+  let guardRunning = false;
+  const guardRoute = async () => {
+    if (guardRunning) return;
+    if (bootInProgress) return;
+    guardRunning = true;
+    try {
+      const viewId = window.location.hash.replace('#', '') || 'stage';
+      const isAuthView = viewId === 'login' || viewId === 'onboarding';
+
+      if (!currentUser && !isAuthView) {
+        navigateTo('login');
+        initLoginView();
+        return;
+      }
+
+      if (currentUser && isAuthView) {
+        navigateTo('stage');
+        return;
+      }
+    } finally {
+      guardRunning = false;
+    }
+  };
+
+  window.addEventListener('hashchange', guardRoute);
+  window.addEventListener('popstate', guardRoute);
 
   window.addEventListener('offline', () => showToast('You are offline. Some features may not work.', 'warning'));
   window.addEventListener('online', () => showToast('Back online.', 'success'));

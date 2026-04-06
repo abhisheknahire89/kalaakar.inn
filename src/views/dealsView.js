@@ -58,7 +58,7 @@ function renderDealsDashboard(container, jobs, proposals) {
         </div>
         <h3 class="text-white font-bold text-xl mb-2">No Active Deals</h3>
         <p class="text-sm text-muted max-w-sm">Manage your professional collaborations and hiring requests in one secure dashboard.</p>
-        <button onclick="location.hash='#explore'" class="btn-gold px-10 py-3 rounded-full font-bold mt-8 shadow-lg shadow-gold/20">Explore Talent ✦</button>
+        <button id="deals-empty-explore" class="btn-gold px-10 py-3 rounded-full font-bold mt-8 shadow-lg shadow-gold/20">Explore Talent ✦</button>
       </div>
     `;
     return;
@@ -136,6 +136,9 @@ function bindDealsActions(container) {
     if (strip) {
       const dealId = strip.getAttribute('data-deal-id');
       if (dealId) navigateTo('deal', { dealId });
+    }
+    if (e.target?.id === 'deals-empty-explore') {
+      navigateTo('explore');
     }
   });
 }

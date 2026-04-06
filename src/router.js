@@ -24,6 +24,7 @@ export function navigateTo(viewId, state = null) {
 
 function renderView(viewId, state) {
   currentRouteState = state || null;
+  const navViewId = viewId === 'deal' ? 'deals-list' : viewId;
 
   // Hide all views
   document.querySelectorAll('.view').forEach(el => {
@@ -47,7 +48,7 @@ function renderView(viewId, state) {
       // Update active nav links
       document.querySelectorAll('.nav-link, .nav-item').forEach(link => {
         link.classList.remove('active', 'text-gold');
-        if (link.getAttribute('href') === `#${viewId}`) {
+        if (link.getAttribute('href') === `#${navViewId}`) {
           link.classList.add('active', 'text-gold');
         }
       });

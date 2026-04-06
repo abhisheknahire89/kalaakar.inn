@@ -2,10 +2,12 @@ import { currentUser } from '../app.js';
 import { getProfile } from '../api/profile.js';
 import { listCreatorPosts } from '../api/posts.js';
 import { listCreatorVouches } from '../api/vouches.js';
+import { listCreatorCredits } from '../api/credits.js';
 import { getRouteState, navigateTo } from '../router.js';
 import { escapeHtml, safeUrl } from '../utils/escapeHtml.js';
 import { openHireFlow } from '../components/hireFlow.js';
 import { showToast } from '../components/toast.js';
+import { followUser, unfollowUser, isFollowing } from '../api/social.js';
 
 let profileBound = false;
 
@@ -24,13 +26,16 @@ export async function initProfileView() {
   container.innerHTML = `<div class="text-center text-muted py-20 animate-pulse">Loading verified portfolio...</div>`;
 
   try {
-    const [profile, posts, vouches] = await Promise.all([
+    const [profile, posts, vouches, credits, following] = await Promise.all([
       getProfile(userId),
       listCreatorPosts(userId, { limit: 15 }),
-      listCreatorVouches(userId, { limit: 12 })
+      listCreatorVouches(userId, { limit: 12 }),
+      listCreatorCredits(userId, { limit: 20 }),
+      currentUser?.$id && userId !== currentUser.$id ? isFollowing(userId) : Promise.resolve(false),
     ]);
 
-    renderProfessionalPortfolio(container, profile, posts, vouches);
+    if (!profile) throw new Error('Missing profile');
+    renderProfessionalPortfolio(container, profile, posts, vouches, credits, { following });
     
     if (!profileBound) {
       profileBound = true;
@@ -43,10 +48,12 @@ export async function initProfileView() {
   }
 }
 
-function renderProfessionalPortfolio(container, profile, posts, vouches) {
+function renderProfessionalPortfolio(container, profile, posts, vouches, credits, { following = false } = {}) {
   const isMine = currentUser?.$id && (profile.userId || profile.$id) === currentUser.$id;
   const avatar = safeUrl(profile.avatar) || '/assets/default-avatar.svg';
   const reliability = profile.reliability || 0;
+  const creatorUserId = profile.userId || profile.$id;
+  const followLabel = following ? 'Following' : 'Connect';
 
   container.innerHTML = `
     <!-- Portfolio Header: PRO IDENTITY -->
@@ -76,8 +83,8 @@ function renderProfessionalPortfolio(container, profile, posts, vouches) {
 
         <div class="flex flex-col gap-3 w-full md:w-auto">
           ${!isMine ? `
-            <button class="btn-gold px-12 py-4 rounded-full font-bold text-lg shadow-xl shadow-gold/20 js-hire-main" data-user-id="${escapeHtml(profile.userId || profile.$id)}" data-name="${escapeHtml(profile.name)}">Hire Artist ✦</button>
-            <button class="btn-ghost border border-white/10 px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold/5">Network Follow</button>
+            <button class="btn-gold px-12 py-4 rounded-full font-bold text-lg shadow-xl shadow-gold/20 js-hire-main" data-user-id="${escapeHtml(creatorUserId)}" data-name="${escapeHtml(profile.name)}">Hire Artist ✦</button>
+            <button class="btn-ghost border border-white/10 px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold/5 js-follow" data-user-id="${escapeHtml(creatorUserId)}">${escapeHtml(followLabel)}</button>
           ` : `
             <button id="edit-profile-btn" class="btn-ghost border border-gold/30 text-gold px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest">Update Credentials</button>
           `}
@@ -85,10 +92,17 @@ function renderProfessionalPortfolio(container, profile, posts, vouches) {
       </div>
     </div>
 
+    <!-- Tabs -->
+    <div class="glass-panel rounded-2xl p-2 mb-8 flex gap-2">
+      <button class="profile-tab-btn flex-1 pill-tab active" data-tab="posts">Posts</button>
+      <button class="profile-tab-btn flex-1 pill-tab" data-tab="vouches">Vouches</button>
+      <button class="profile-tab-btn flex-1 pill-tab" data-tab="credits">Credits</button>
+    </div>
+
     <!-- Portfolio Sections -->
     <div class="space-y-12">
       <!-- CENTERPIECE: VIDEO GRID -->
-      <section>
+      <section id="profile-tab-posts">
         <div class="flex items-center justify-between mb-6 px-2">
           <div class="flex items-center gap-4">
             <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">Performances</h3>
@@ -103,7 +117,7 @@ function renderProfessionalPortfolio(container, profile, posts, vouches) {
       </section>
 
       <!-- VOUCH WALL: TESTIMONIALS -->
-      <section>
+      <section id="profile-tab-vouches" class="hidden">
         <div class="flex items-center gap-4 mb-6 px-2">
           <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">Vouch Wall</h3>
           <div class="h-px w-20 bg-gold/20"></div>
@@ -113,6 +127,25 @@ function renderProfessionalPortfolio(container, profile, posts, vouches) {
           ${vouches.length === 0 ? `<div class="col-span-2 text-muted text-xs opacity-50 px-2 italic font-medium">Verified professional vouches appear here after completions.</div>` : ''}
         </div>
       </section>
+
+      <!-- CREDITS -->
+      <section id="profile-tab-credits" class="hidden">
+        <div class="flex items-center gap-4 mb-6 px-2">
+          <h3 class="text-xs font-bold uppercase tracking-[0.25em] text-white">Credits</h3>
+          <div class="h-px w-20 bg-gold/20"></div>
+        </div>
+        <div class="space-y-3">
+          ${credits.map(c => renderCreditStrip(c)).join('')}
+          ${credits.length === 0 ? `
+            <div class="glass-panel rounded-2xl p-6 text-center text-sm text-muted">
+              No credits listed yet.
+              <div class="mt-4">
+                <button class="btn-gold px-6 py-2 rounded-full text-sm js-credits-cta">Create a post</button>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </section>
     </div>
   `;
 }
@@ -120,7 +153,7 @@ function renderProfessionalPortfolio(container, profile, posts, vouches) {
 function renderPortfolioThumb(post) {
   const isVideo = (post.postType || '').toLowerCase() === 'video';
   return `
-    <div class="aspect-[9/16] bg-surface rounded-2xl overflow-hidden border border-white/5 relative group cursor-pointer active:scale-95 transition-all" onclick="location.hash='#stage'">
+    <button class="js-profile-thumb aspect-[9/16] bg-surface rounded-2xl overflow-hidden border border-white/5 relative group cursor-pointer active:scale-95 transition-all w-full" data-post-id="${escapeHtml(post.$id || '')}" aria-label="Open post">
       ${post.mediaUrl ? `
         <img src="${post.mediaUrl}" class="w-full h-full object-cover brightness-75 group-hover:scale-110 transition-transform duration-1000">
       ` : `<div class="w-full h-full flex items-center justify-center p-4 text-[10px] text-muted text-center">${escapeHtml(post.content || '')}</div>`}
@@ -128,7 +161,7 @@ function renderPortfolioThumb(post) {
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
         <div class="absolute bottom-3 left-3 right-3 text-[10px] font-bold text-white truncate">${escapeHtml(post.content || 'Performance')}</div>
       </div>
-    </div>
+    </button>
   `;
 }
 
@@ -151,6 +184,78 @@ function bindPortfolioActions(container) {
       const creatorId = hireBtn.getAttribute('data-user-id');
       const creatorName = hireBtn.getAttribute('data-name');
       openHireFlow({ creatorId, creatorName });
+      return;
+    }
+
+    const followBtn = e.target.closest('.js-follow');
+    if (followBtn) {
+      const targetId = followBtn.getAttribute('data-user-id');
+      if (!targetId) return;
+      toggleFollow(followBtn, targetId);
+      return;
+    }
+
+    const tabBtn = e.target.closest('.profile-tab-btn');
+    if (tabBtn) {
+      const tab = tabBtn.getAttribute('data-tab') || 'posts';
+      switchTab(container, tab);
+      return;
+    }
+
+    const thumb = e.target.closest('.js-profile-thumb');
+    if (thumb) {
+      navigateTo('stage');
+      return;
+    }
+
+    if (e.target?.closest?.('.js-credits-cta')) {
+      navigateTo('stage');
     }
   });
+}
+
+async function toggleFollow(btn, targetId) {
+  if (!currentUser?.$id) return showToast('Sign in to connect.', 'warning');
+  const wasFollowing = btn.textContent?.toLowerCase().includes('following');
+  btn.disabled = true;
+  try {
+    if (wasFollowing) {
+      await unfollowUser(targetId);
+      btn.textContent = 'Connect';
+      showToast('Disconnected.', 'neutral');
+    } else {
+      await followUser(targetId);
+      btn.textContent = 'Following';
+      showToast('Connected. You’ll see their updates.', 'success');
+    }
+  } catch (e) {
+    showToast(e?.message || 'Connection failed.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function switchTab(container, tab) {
+  container.querySelectorAll('.profile-tab-btn').forEach((b) => b.classList.toggle('active', b.getAttribute('data-tab') === tab));
+  const posts = container.querySelector('#profile-tab-posts');
+  const vouches = container.querySelector('#profile-tab-vouches');
+  const credits = container.querySelector('#profile-tab-credits');
+  if (posts) posts.classList.toggle('hidden', tab !== 'posts');
+  if (vouches) vouches.classList.toggle('hidden', tab !== 'vouches');
+  if (credits) credits.classList.toggle('hidden', tab !== 'credits');
+}
+
+function renderCreditStrip(c) {
+  const title = c.projectTitle || c.title || c.project || 'Project';
+  const role = c.role || c.roleRequired || c.position || 'Role';
+  const year = c.year || c.date || '';
+  return `
+    <div class="glass-panel p-5 rounded-2xl border-white/5 flex items-center justify-between">
+      <div>
+        <div class="text-white font-bold text-sm tracking-tight">${escapeHtml(title)}</div>
+        <div class="text-[10px] text-muted font-bold uppercase tracking-widest mt-1.5">${escapeHtml(role)} ${year ? `• ${escapeHtml(year)}` : ''}</div>
+      </div>
+      <i data-lucide="clapperboard" class="w-4 h-4 text-gold opacity-70"></i>
+    </div>
+  `;
 }

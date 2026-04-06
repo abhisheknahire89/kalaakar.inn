@@ -18,6 +18,7 @@ export async function initDealRoomView() {
   if (!dealId) {
     container.innerHTML = emptyState('Oops! This deal seems to have vanished.');
     if (window.lucide) window.lucide.createIcons();
+    container.querySelector('#deal-empty-back')?.addEventListener('click', () => navigateTo('stage'), { once: true });
     return;
   }
 
@@ -29,6 +30,7 @@ export async function initDealRoomView() {
     logError(error, { area: 'deal_load' });
     container.innerHTML = emptyState('Unable to load this deal. It may be private or expired.');
     if (window.lucide) window.lucide.createIcons();
+    container.querySelector('#deal-empty-back')?.addEventListener('click', () => navigateTo('stage'), { once: true });
     return;
   }
 
@@ -50,7 +52,7 @@ function emptyState(message) {
       </div>
       <h3 class="text-xl font-bold text-white mb-2">Deal Room</h3>
       <p class="text-muted mb-8 max-w-xs">${escapeHtml(message)}</p>
-      <button onclick="location.hash='#stage'" class="btn-gold px-8 py-3 rounded-full font-semibold">Back to Feed</button>
+      <button id="deal-empty-back" class="btn-gold px-8 py-3 rounded-full font-semibold">Back to Feed</button>
     </div>
   `;
 }
