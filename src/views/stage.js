@@ -9,6 +9,8 @@ import { incrementPostView } from '../api/posts.js';
 import { showToast } from '../components/toast.js';
 
 let stageBound = false;
+let stageObserver = null;
+let viewTrackedPosts = new Set();
 
 export function initStageView() {
   bindStageInteractions();
@@ -53,28 +55,7 @@ function bindStageInteractions() {
     }
   });
 
-  // Handle video playback and VIEW TRACKING on scroll
-  let viewTrackedPosts = new Set();
-  feed.addEventListener('scroll', () => {
-    const articles = feed.querySelectorAll('article.post-outer');
-    articles.forEach(article => {
-      const rect = article.getBoundingClientRect();
-      const video = article.querySelector('video');
-      const postId = article.getAttribute('data-post-id');
-      
-      if (rect.top >= 0 && rect.bottom <= window.innerHeight + 100) {
-        if (video && video.paused) video.play().catch(() => {});
-        
-        // Track View (Phase 4: Insights)
-        if (postId && !viewTrackedPosts.has(postId)) {
-          viewTrackedPosts.add(postId);
-          incrementPostView(postId);
-        }
-      } else {
-        if (video && !video.paused) video.pause();
-      }
-    });
-  }, { passive: true });
+  // IntersectionObserver handles autoplay/pause + view tracking
 }
 
 async function handleSaveToggle(btn, postId) {
@@ -180,6 +161,41 @@ async function loadFeed() {
 
   feedContainer.classList.add('feed-fade-in');
   if (window.lucide) window.lucide.createIcons();
+  setupAutoplayObserver(feedContainer);
+}
+
+function setupAutoplayObserver(feedEl) {
+  try {
+    stageObserver?.disconnect?.();
+  } catch {
+    // ignore
+  }
+
+  stageObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const article = entry.target;
+        const video = article.querySelector('video');
+        const postId = article.getAttribute('data-post-id');
+
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.72) {
+          if (video && video.paused) video.play().catch(() => {});
+          if (postId && !viewTrackedPosts.has(postId)) {
+            viewTrackedPosts.add(postId);
+            incrementPostView(postId);
+          }
+        } else {
+          if (video && !video.paused) video.pause();
+        }
+      });
+    },
+    {
+      root: feedEl,
+      threshold: [0, 0.4, 0.72, 1],
+    }
+  );
+
+  feedEl.querySelectorAll('article.post-outer').forEach((a) => stageObserver.observe(a));
 }
 
 function getPostType(post) {

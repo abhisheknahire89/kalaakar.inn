@@ -16,7 +16,7 @@ export function initLoginView() {
   });
 }
 
-async function handleGoogleLogin() {
+function handleGoogleLogin() {
   const btn = document.getElementById('google-login-btn');
   const originalContent = btn ? btn.innerHTML : '';
   
@@ -28,8 +28,7 @@ async function handleGoogleLogin() {
   trackEvent('login_start', { method: 'google' });
   
   try {
-    await startGoogleLogin();
-    // Browser redirects here
+    startGoogleLogin(); // triggers full-page redirect
   } catch (error) {
     console.error('Google login failed:', error);
     showToast('Could not start Google login. Please try again.', 'error');

@@ -6,12 +6,12 @@
 }
 
 :root {
-  --bg-void: #000000;
+  --bg-void: #121212;
   --bg-surface: #111111;
   --bg-surface-hover: rgba(255, 255, 255, 0.08);
-  --gold: #D4AF37;
-  --brand-gold: #D4AF37;
-  --gold-glow: rgba(212, 175, 55, 0.3);
+  --gold: #FFD700;
+  --brand-gold: #FFD700;
+  --gold-glow: rgba(255, 215, 0, 0.28);
   --text-primary: #ffffff;
   --text-muted: #AAAAAA;
   --border-strong: rgba(255, 255, 255, 0.12);
@@ -394,9 +394,9 @@ a.nav-item:active,
 
 /* Pulse Animation for FAB */
 @keyframes fab-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-  70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.35); }
+  70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
 }
 
 /* View Transitions */
@@ -481,7 +481,7 @@ section.view[data-view="onboarding"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.35);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: fab-pulse 2s infinite;
   z-index: 60;
@@ -574,7 +574,7 @@ section.view[data-view="onboarding"] {
   text-align: left;
 }
 .post-header-main:focus-visible {
-  outline: 2px solid rgba(212, 175, 55, 0.6);
+  outline: 2px solid rgba(255, 215, 0, 0.55);
   outline-offset: 6px;
   border-radius: 14px;
 }
@@ -582,8 +582,8 @@ section.view[data-view="onboarding"] {
   margin-left: auto;
   padding: 8px 12px;
   border-radius: 9999px;
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  background: rgba(255, 215, 0, 0.12);
   color: var(--gold);
   font-weight: 600;
   font-size: 12px;
@@ -592,8 +592,8 @@ section.view[data-view="onboarding"] {
   transition: background var(--duration), border-color var(--duration), transform var(--duration);
 }
 .post-hire-btn:hover {
-  background: rgba(212, 175, 55, 0.18);
-  border-color: rgba(212, 175, 55, 0.8);
+  background: rgba(255, 215, 0, 0.18);
+  border-color: rgba(255, 215, 0, 0.8);
   transform: translateY(-1px);
 }
 .post-hire-btn:active { transform: translateY(0); }
@@ -609,7 +609,7 @@ section.view[data-view="onboarding"] {
   border-radius: 9999px;
   object-fit: cover;
   background: var(--bg-surface);
-  border: 2px solid rgba(212, 175, 55, 0.25);
+  border: 2px solid rgba(255, 215, 0, 0.24);
 }
 .post-meta { min-width: 0; }
 .post-author {
@@ -873,7 +873,7 @@ button, a, .nav-item {
   height: 2px;
   background: var(--gold);
   border-radius: 9999px;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.08);
 }
 
 /* Better scrolling for feeds */
@@ -1138,7 +1138,7 @@ button, a, .nav-item {
 .leading-relaxed { line-height: 1.625; }
 
 /* Group hover (simplified) */
-.group:hover .group-hover\:bg-gold\/20 { background-color: rgba(212, 175, 55, 0.2); }
+.group:hover .group-hover\:bg-gold\/20 { background-color: rgba(255, 215, 0, 0.2); }
 
 /* Spacing for safe areas */
 .pb-safe { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
@@ -1176,6 +1176,8 @@ button, a, .nav-item {
   overflow-y: auto;
   padding: 12px 12px 110px 12px; /* bottom nav */
   box-sizing: border-box;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 .feed-fade-in {
@@ -1194,6 +1196,7 @@ article.post-outer {
   border: 1px solid var(--border-subtle);
   background: #070708;
   position: relative;
+  scroll-snap-align: start;
 }
 
 .post-media-container {
@@ -1236,7 +1239,7 @@ article.post-outer {
   border-radius: 9999px;
   object-fit: cover;
   background: var(--bg-surface);
-  border: 2px solid rgba(212,175,55,0.22);
+  border: 2px solid rgba(255,215,0,0.22);
 }
 .post-creator-details { min-width: 0; text-align: left; }
 .post-creator-name { color: #fff; font-weight: 700; font-size: 13px; line-height: 1.15; }
@@ -1295,9 +1298,9 @@ article.post-outer {
 .post-sidebar-action.js-open-hire .post-sidebar-icon,
 .post-sidebar-icon.is-hire {
   background: var(--gold);
-  border-color: rgba(212,175,55,0.85);
+  border-color: rgba(255,215,0,0.85);
   color: #000;
-  box-shadow: 0 10px 22px rgba(212,175,55,0.22);
+  box-shadow: 0 10px 22px rgba(255,215,0,0.22);
 }
 .post-sidebar-action.js-open-hire .post-sidebar-label { color: var(--gold); opacity: 1; }
 
