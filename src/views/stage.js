@@ -128,9 +128,10 @@ async function loadFeed() {
     feedContainer.innerHTML = `
       <div class="flex flex-col items-center justify-center p-12 text-center h-full">
         <p class="text-muted mb-4">Stage is currently dark.</p>
-        <button onclick="location.reload()" class="btn-gold px-8 py-2 rounded-full">Refresh</button>
+        <button id="feed-refresh-btn" class="btn-gold px-8 py-2 rounded-full">Refresh</button>
       </div>
     `;
+    document.getElementById('feed-refresh-btn')?.addEventListener('click', () => window.location.reload(), { once: true });
     return;
   }
 
@@ -177,6 +178,7 @@ async function loadFeed() {
     });
   });
 
+  feedContainer.classList.add('feed-fade-in');
   if (window.lucide) window.lucide.createIcons();
 }
 

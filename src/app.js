@@ -14,17 +14,33 @@ export let currentUser = null;
 export let currentProfile = null;
 
 export async function boot() {
+  const bootStartedAt = performance.now();
+  const MIN_SPLASH_MS = 1700;
+  let splashHideScheduled = false;
+
   initRouter();
   initGlobalGuards();
 
   // Hide splash screen helper (must never be blocked by awaits)
   const hideSplash = () => {
     const splash = document.getElementById('splash-screen');
-    if (splash) splash.style.display = 'none';
+    if (!splash) return;
+    splash.classList.add('is-hiding');
+    setTimeout(() => {
+      splash.style.display = 'none';
+    }, 460);
+  };
+
+  const scheduleHideSplash = ({ force = false } = {}) => {
+    if (splashHideScheduled) return;
+    splashHideScheduled = true;
+    const elapsed = performance.now() - bootStartedAt;
+    const wait = force ? 0 : Math.max(0, MIN_SPLASH_MS - elapsed);
+    setTimeout(hideSplash, wait);
   };
 
   // Guard against stuck splash screen
-  setTimeout(hideSplash, 4000);
+  setTimeout(() => scheduleHideSplash({ force: true }), 4500);
 
   // 1. Handle email magic-link callback first (userId/secret in query string)
   const consumed = await consumeMagicLinkFromUrl();
@@ -33,13 +49,13 @@ export async function boot() {
   } else if (consumed?.error) {
     showToast(consumed.error, 'error');
   }
-
+  
   // 3. Check auth & profile state in one go
   const session = await checkSession();
   currentUser = session.user;
   currentProfile = session.profile;
-  
-  hideSplash();
+
+  scheduleHideSplash();
 
   if (!currentUser) {
     navigateTo('login');
