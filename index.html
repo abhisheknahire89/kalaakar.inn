@@ -4,15 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#121212" />
-    <title>Kalakar | Where talent meets the screen</title>
+    <title>Kalakar | Pro-Hiring Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Yatra+One&display=swap" rel="stylesheet">
-    <script>
-      // Immediate Fallback for Splash Screen
-      setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        if (splash) splash.style.display = 'none';
-      }, 4500);
-    </script>
+    <link rel="stylesheet" href="/src/index.css">
   </head>
   <body>
     <!-- SHIROREKHA SPLASH SCREEN -->
@@ -35,464 +29,156 @@
       <div class="login-container glass-panel">
         <div class="login-logo">
           <h1 class="font-poppins text-gold text-3xl font-bold mb-2">✦ kalakar ✦</h1>
-          <p class="login-tagline">Where talent meets the screen</p>
+          <p class="login-tagline">Pro-Hiring Creative Network</p>
         </div>
 
-        <div id="phone-form" class="login-section">
-          <h3 class="text-label text-muted mb-4">Sign in with Phone</h3>
-          <div class="phone-input-group">
-            <select id="country-code" class="input-field input-field--sm">
-              <option value="+91" selected>+91 🇮🇳</option>
-              <option value="+1">+1 🇺🇸</option>
-              <option value="+44">+44 🇬🇧</option>
-              <option value="+971">+971 🇦🇪</option>
-            </select>
-            <input type="tel" id="phone-input" class="input-field" placeholder="Phone number" maxlength="10" inputmode="numeric" pattern="[0-9]*" autocomplete="tel">
-          </div>
-          <button id="send-otp-btn" class="btn-gold btn-full">Send OTP</button>
-        </div>
-
-        <div id="otp-form" class="login-section hidden">
-          <p class="text-body mb-4">Enter the 4-digit code sent to<br><strong id="otp-phone-display" class="text-white"></strong></p>
-          <div class="otp-inputs" id="otp-inputs">
-            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit" data-index="0" autofocus>
-            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit" data-index="1">
-            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit" data-index="2">
-            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="otp-digit" data-index="3">
-          </div>
-          <button id="verify-otp-btn" class="btn-gold btn-full">Verify</button>
-          <p class="text-caption text-center mt-4">
-            <span id="resend-timer">Resend in 0:30</span>
-            <button id="resend-btn" class="btn-ghost hidden">Resend OTP</button>
-          </p>
-          <button id="change-number-btn" class="btn-ghost mt-2">← Change number</button>
-        </div>
-
-        <div class="login-divider"><span>or</span></div>
-
-        <button id="guest-btn" class="btn-ghost btn-full" style="border: 1px solid var(--border)">
-          <i data-lucide="user" class="w-5 h-5 mr-2"></i>
-          Continue as Guest
-        </button>
-
-        <p class="login-terms text-caption mt-6">
-          By continuing, you agree to our <a href="#terms">Terms of Service</a> & <a href="#privacy">Privacy Policy</a>
-        </p>
-      </div>
-    </section>
-
-    <!-- ONBOARDING VIEW -->
-    <section data-view="onboarding" class="view hidden">
-      <div class="onboarding-container glass-panel">
-        <div class="onboarding-header mb-6">
-          <h2 class="font-poppins text-2xl font-bold">Welcome to Kalakar ✦</h2>
-          <p class="text-muted text-sm" id="onboarding-step-indicator">Step 1 of 4</p>
-        </div>
-        
-        <div id="onboarding-step-1" class="onboarding-step">
-          <h3 class="text-lg mb-4">What's your primary craft?</h3>
-          <div class="grid grid-cols-2 gap-3 mb-6" id="craft-selection">
-            <button class="craft-btn active" data-craft="actor">🎭 Actor</button>
-            <button class="craft-btn" data-craft="director">🎬 Director</button>
-            <button class="craft-btn" data-craft="dop">📷 DOP</button>
-            <button class="craft-btn" data-craft="editor">✂️ Editor</button>
-            <button class="craft-btn" data-craft="dancer">💃 Dancer</button>
-            <button class="craft-btn" data-craft="writer">✍️ Writer</button>
-            <button class="craft-btn" data-craft="musician">🎵 Musician</button>
-            <button class="craft-btn" data-craft="makeup">💄 Makeup</button>
-          </div>
-          <button class="btn-gold btn-full next-step-btn">Next →</button>
-        </div>
-
-        <div id="onboarding-step-2" class="onboarding-step hidden">
-          <h3 class="text-lg mb-4">Tell us about you</h3>
-          <div class="form-group mb-4">
-            <label class="text-sm text-muted">Your Name</label>
-            <input type="text" id="ob-name" class="input-field" placeholder="Full Name">
-          </div>
-          <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="form-group">
-              <label class="text-sm text-muted">City</label>
-              <input type="text" id="ob-city" class="input-field" placeholder="Mumbai">
-            </div>
-            <div class="form-group">
-              <label class="text-sm text-muted">State</label>
-              <input type="text" id="ob-state" class="input-field" placeholder="Maharashtra">
-            </div>
-          </div>
-          <div class="flex justify-between">
-            <button class="btn-ghost prev-step-btn">← Back</button>
-            <button class="btn-gold next-step-btn">Next →</button>
-          </div>
-        </div>
-
-        <div id="onboarding-step-3" class="onboarding-step hidden">
-          <h3 class="text-lg mb-4">How do you work?</h3>
-          <div class="form-group mb-6">
-            <label class="text-sm text-muted mb-2 block">I am:</label>
-            <div class="radio-group flex flex-col gap-2">
-              <label class="radio-label"><input type="radio" name="accountType" value="talent" checked> Talent / Artist</label>
-              <label class="radio-label"><input type="radio" name="accountType" value="studio"> Studio / Production House</label>
-              <label class="radio-label"><input type="radio" name="accountType" value="recruiter"> Casting Director / Recruiter</label>
-            </div>
-          </div>
-          <div class="form-group mb-6">
-            <label class="text-sm text-muted">Years of Experience</label>
-            <input type="number" id="ob-experience" class="input-field" placeholder="0" min="0">
-          </div>
-          <div class="flex justify-between">
-            <button class="btn-ghost prev-step-btn">← Back</button>
-            <button class="btn-gold next-step-btn">Next →</button>
-          </div>
-        </div>
-
-        <div id="onboarding-step-4" class="onboarding-step hidden">
-          <h3 class="text-lg mb-4">Show your craft</h3>
-          <p class="text-sm text-muted mb-6">Upload your first showreel (Max 3 mins, 100MB)</p>
-          <div class="upload-area border-2 border-dashed border-strong rounded-lg p-8 text-center mb-6 cursor-pointer hover:border-gold transition-colors">
-            <span class="text-2xl mb-2 block">📹</span>
-            <span class="text-gold font-medium">Upload Video</span>
-            <input type="file" id="ob-video" class="hidden" accept="video/*">
-          </div>
-          <div class="flex justify-between items-center">
-            <button class="btn-ghost prev-step-btn">← Back</button>
-            <button id="complete-onboarding-btn" class="btn-gold">Complete Setup ✦</button>
-          </div>
+        <div class="login-section">
+          <button id="google-login-btn" class="btn-google btn-full">
+            <span class="text-lg">G</span>
+            Continue with Google
+          </button>
+          <div class="login-divider my-6"><span>or</span></div>
+          <input type="email" id="email-input" class="input-field mb-3" placeholder="Enter work email">
+          <button id="email-link-btn" class="btn-gold btn-full">Sign in with Magic Link</button>
         </div>
       </div>
     </section>
 
-    <!-- APP SHELL (Main App) -->
-    <div id="app-shell" class="hidden h-screen flex flex-col md:flex-row bg-void text-primary overflow-hidden">
+    <!-- APP SHELL -->
+    <div id="app-shell" class="hidden h-screen flex flex-col bg-void text-primary overflow-hidden">
       
-      <!-- TOP NAV (Desktop/Tablet) -->
+      <!-- TOP NAV (Desktop Only) -->
       <nav id="top-nav" class="hidden md:flex fixed top-0 w-full h-16 glass-panel border-b border-strong z-50 px-6 items-center justify-between">
         <div class="flex items-center gap-8">
-          <h1 class="font-poppins text-gold text-2xl font-bold cursor-pointer tracking-wide" onclick="window.location.hash='stage'">kalakar</h1>
-          <div class="search-bar relative">
-            <span class="absolute left-3 top-2 text-muted">🔍</span>
-            <input type="text" placeholder="Search talent, jobs..." class="input-field pl-9 py-1.5 text-sm w-64 rounded-full bg-surface border-none">
-          </div>
+          <a href="#stage" class="font-poppins text-gold text-2xl font-bold tracking-wide">kalakar</a>
         </div>
         <div class="flex items-center gap-6">
-          <a href="#stage" class="nav-link active">Home</a>
-          <a href="#network" class="nav-link">Network</a>
-          <a href="#jobs" class="nav-link">Jobs</a>
-          <a href="#messages" class="nav-link relative">Messaging <span id="msg-badge" class="badge hidden">0</span></a>
-          <a href="#notifications" class="nav-link relative">Notifications <span id="notif-badge" class="badge hidden">0</span></a>
+          <a href="#stage" class="nav-link active">Stage</a>
+          <a href="#explore" class="nav-link">Discovery</a>
+          <button id="top-create-btn" class="btn-gold px-4 py-2 rounded-full text-sm">Post Talent</button>
+          <a href="#deals-list" class="nav-link">My Deals</a>
           <div class="relative group cursor-pointer">
-            <div class="flex items-center gap-2">
-              <img id="nav-avatar" src="/assets/default-avatar.svg" class="w-8 h-8 rounded-full border border-strong object-cover bg-surface" alt="Me">
-              <span class="text-sm">Me ▼</span>
-            </div>
-            <div class="absolute right-0 top-10 w-48 glass-panel border border-strong rounded-md shadow-lg hidden group-hover:block py-2">
-              <a href="#profile" class="block px-4 py-2 text-sm hover:bg-surface">View Profile</a>
-              <a href="#settings" class="block px-4 py-2 text-sm hover:bg-surface">Settings</a>
-              <div class="h-px bg-strong my-1"></div>
-              <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-surface">Sign Out</button>
-            </div>
+            <img id="nav-avatar" src="/assets/default-avatar.svg" class="w-8 h-8 rounded-full border border-strong object-cover bg-surface">
           </div>
         </div>
       </nav>
 
-      <!-- MAIN CONTENT AREA -->
-      <main id="main-content" class="flex-1 overflow-y-auto md:pt-16 pb-16 md:pb-0 relative scroll-smooth">
+      <!-- MAIN CONTENT -->
+      <main id="main-content" class="flex-1 overflow-hidden relative">
         
-        <!-- STAGE VIEW -->
-        <section data-view="stage" class="view hidden max-w-3xl mx-auto p-4 md:p-6">
-          <div class="weekly-prompt glass-panel border border-gold rounded-xl p-4 mb-6 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-1 h-full bg-gold"></div>
-            <h3 class="text-gold font-poppins font-semibold text-sm uppercase tracking-wider mb-1">Weekly Prompt</h3>
-            <p class="text-lg font-medium mb-3">"Show us your best dramatic monologue in under 60 seconds."</p>
-            <button class="btn-gold text-sm py-1.5 px-4 rounded-full" onclick="document.getElementById('post-composer').classList.remove('hidden')">Participate ✦</button>
-          </div>
-
-          <!-- Post Composer Trigger -->
-          <div class="glass-panel rounded-xl p-4 mb-6 flex gap-3 items-center cursor-pointer hover:bg-surface transition-colors" onclick="document.getElementById('post-composer').classList.remove('hidden')">
-            <img id="composer-avatar" src="/assets/default-avatar.svg" class="w-10 h-10 rounded-full object-cover bg-surface">
-            <div class="text-muted flex-1">Share your latest reel, update, or project...</div>
-            <span class="text-xl">📷</span>
-          </div>
-
-          <!-- Feed Filters -->
-          <div class="flex gap-2 overflow-x-auto pb-2 mb-4 hide-scrollbar">
-            <button class="pill-tab active">For You</button>
-            <button class="pill-tab">Following</button>
-            <button class="pill-tab">Actors</button>
-            <button class="pill-tab">Directors</button>
-            <button class="pill-tab">DOPs</button>
-          </div>
-
-          <!-- Feed Container -->
-          <div id="stage-feed" class="flex flex-col gap-6">
-            <!-- Skeletons will be injected here initially -->
-          </div>
+        <!-- STAGE (Feed) -->
+        <section data-view="stage" class="view hidden h-full">
+          <div id="stage-feed" class="h-full"></div>
         </section>
 
-        <!-- NETWORK VIEW -->
-        <section data-view="network" class="view hidden max-w-5xl mx-auto p-4 md:p-6">
-          <h2 class="text-2xl font-poppins font-bold mb-6">Network</h2>
-          <div class="flex gap-4 border-b border-strong mb-6">
-            <button class="tab-btn active" data-target="network-discover">Discover</button>
-            <button class="tab-btn" data-target="network-requests">Requests</button>
-            <button class="tab-btn" data-target="network-my">My Network</button>
-            <button class="tab-btn" data-target="network-vouches">Vouches</button>
+        <!-- DISCOVERY (Explore) -->
+        <section data-view="explore" class="view hidden max-w-4xl mx-auto p-4 md:p-6 overflow-y-auto h-full pb-32">
+          <div class="flex items-center justify-between mb-8 px-2">
+            <h2 class="text-3xl font-poppins font-bold text-white">Discovery</h2>
           </div>
-          <div id="network-content">
-            <!-- Dynamic content -->
-            <div class="text-center text-muted py-12">Loading network...</div>
-          </div>
+          <div id="explore-content"></div>
         </section>
 
-        <!-- JOBS VIEW -->
-        <section data-view="jobs" class="view hidden max-w-5xl mx-auto p-4 md:p-6">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-poppins font-bold">Jobs & Casting</h2>
-            <button class="btn-gold px-4 py-2 rounded-md text-sm">Post a Job</button>
+        <!-- MY DEALS (Status/Chat Dashboard) -->
+        <section data-view="deals-list" class="view hidden max-w-4xl mx-auto p-4 md:p-6 overflow-y-auto h-full pb-32">
+          <div class="flex items-center justify-between mb-8 px-2">
+            <h2 class="text-3xl font-poppins font-bold text-white">My Deals</h2>
           </div>
-          <div class="flex gap-4 border-b border-strong mb-6">
-            <button class="tab-btn active">All Jobs</button>
-            <button class="tab-btn">Casting Calls</button>
-            <button class="tab-btn">Crew Hiring</button>
-            <button class="tab-btn">My Applications</button>
-          </div>
-          <div id="jobs-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Dynamic content -->
-            <div class="col-span-full text-center text-muted py-12">Loading jobs...</div>
-          </div>
+          <div id="deals-list-content"></div>
         </section>
 
-        <!-- MESSAGES VIEW -->
-        <section data-view="messages" class="view hidden h-full flex flex-col md:flex-row">
-          <div class="w-full md:w-1/3 border-r border-strong h-full flex flex-col bg-void">
-            <div class="p-4 border-b border-strong">
-              <h2 class="text-xl font-poppins font-bold mb-2">Messages</h2>
-              <input type="text" placeholder="Search conversations..." class="input-field w-full py-1.5 text-sm">
-            </div>
-            <div id="conversations-list" class="flex-1 overflow-y-auto">
-              <!-- Dynamic content -->
-            </div>
-          </div>
-          <div class="hidden md:flex flex-1 flex-col h-full bg-[#0a0a0c]" id="chat-area">
-            <div class="flex-1 flex items-center justify-center text-muted">
-              Select a conversation to start messaging
-            </div>
-          </div>
+        <!-- PROFILE (Portfolio) -->
+        <section data-view="profile" class="view hidden max-w-4xl mx-auto p-4 md:p-6 overflow-y-auto h-full pb-32">
+          <div id="profile-content"></div>
         </section>
 
-        <!-- NOTIFICATIONS VIEW -->
-        <section data-view="notifications" class="view hidden max-w-2xl mx-auto p-4 md:p-6">
-          <h2 class="text-2xl font-poppins font-bold mb-6">Notifications</h2>
-          <div id="notifications-list" class="flex flex-col gap-2">
-            <!-- Dynamic content -->
-            <div class="text-center text-muted py-12">No new notifications</div>
-          </div>
-        </section>
-
-        <!-- PROFILE VIEW -->
-        <section data-view="profile" class="view hidden max-w-4xl mx-auto p-4 md:p-6">
-          <div id="profile-content">
-            <!-- Dynamic content -->
-            <div class="text-center text-muted py-12">Loading profile...</div>
-          </div>
-        </section>
-
-        <!-- SETTINGS VIEW -->
-        <section data-view="settings" class="view hidden max-w-3xl mx-auto p-4 md:p-6">
-          <h2 class="text-2xl font-poppins font-bold mb-6">Settings</h2>
-          <div class="glass-panel rounded-xl overflow-hidden">
-            <div class="divide-y divide-strong">
-              <a href="#profile" class="flex items-center gap-4 p-4 hover:bg-surface transition-colors">
-                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
-                  <i data-lucide="user" class="w-5 h-5"></i>
-                </div>
-                <div class="flex-1">
-                  <h3 class="font-medium text-white">Edit Profile</h3>
-                  <p class="text-xs text-muted">Update your name, bio, and photo</p>
-                </div>
-                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
-              </a>
-              <a href="#notifications" class="flex items-center gap-4 p-4 hover:bg-surface transition-colors">
-                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
-                  <i data-lucide="bell" class="w-5 h-5"></i>
-                </div>
-                <div class="flex-1">
-                  <h3 class="font-medium text-white">Notifications</h3>
-                  <p class="text-xs text-muted">Manage notification preferences</p>
-                </div>
-                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
-              </a>
-              <a href="#saved" class="flex items-center gap-4 p-4 hover:bg-surface transition-colors">
-                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
-                  <i data-lucide="bookmark" class="w-5 h-5"></i>
-                </div>
-                <div class="flex-1">
-                  <h3 class="font-medium text-white">Saved Items</h3>
-                  <p class="text-xs text-muted">View your bookmarked posts and jobs</p>
-                </div>
-                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
-              </a>
-              <div class="flex items-center gap-4 p-4 hover:bg-surface transition-colors cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
-                  <i data-lucide="shield" class="w-5 h-5"></i>
-                </div>
-                <div class="flex-1">
-                  <h3 class="font-medium text-white">Privacy & Security</h3>
-                  <p class="text-xs text-muted">Control your privacy settings</p>
-                </div>
-                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
-              </div>
-              <div class="flex items-center gap-4 p-4 hover:bg-surface transition-colors cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-gold">
-                  <i data-lucide="help-circle" class="w-5 h-5"></i>
-                </div>
-                <div class="flex-1">
-                  <h3 class="font-medium text-white">Help & Support</h3>
-                  <p class="text-xs text-muted">Get help or contact us</p>
-                </div>
-                <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
-              </div>
-            </div>
-          </div>
-          <button id="settings-logout-btn" class="btn-ghost text-red-400 w-full mt-6 border border-red-900/30 rounded-xl py-4 hover:bg-red-900/10 transition-colors flex items-center justify-center gap-2">
-            <i data-lucide="log-out" class="w-5 h-5"></i> Sign Out
-          </button>
-          <p class="text-center text-xs text-muted mt-6">Kalakar v1.0 | Made with love in India</p>
-        </section>
-
-        <!-- SEARCH VIEW -->
-        <section data-view="search" class="view hidden max-w-3xl mx-auto p-4 md:p-6">
-          <div class="mb-6">
-            <div class="relative">
-              <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted"></i>
-              <input type="text" id="search-input" class="input-field pl-12 py-4 rounded-full text-lg" placeholder="Search talent, jobs, studios...">
-            </div>
-          </div>
-          <div class="mb-6">
-            <h3 class="text-sm text-muted mb-3 uppercase tracking-wider">Trending Searches</h3>
-            <div class="flex flex-wrap gap-2">
-              <span class="pill-tab">Actors in Mumbai</span>
-              <span class="pill-tab">DOP Freelance</span>
-              <span class="pill-tab">Short Film Auditions</span>
-              <span class="pill-tab">Music Video Editor</span>
-            </div>
-          </div>
-          <div id="search-results" class="space-y-4">
-            <h3 class="text-sm text-muted mb-3 uppercase tracking-wider">Recently Viewed</h3>
-            <div class="glass-panel rounded-xl p-4 flex items-center gap-4">
-              <img src="https://picsum.photos/seed/search1/100/100" class="w-12 h-12 rounded-full object-cover">
-              <div class="flex-1">
-                <h4 class="font-medium text-white">Priya Patel</h4>
-                <p class="text-xs text-muted">Cinematographer | Ad Films</p>
-              </div>
-              <button class="btn-ghost border border-strong rounded-full px-3 py-1 text-xs">View</button>
-            </div>
-            <div class="glass-panel rounded-xl p-4 flex items-center gap-4">
-              <div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center text-gold">
-                <i data-lucide="briefcase" class="w-6 h-6"></i>
-              </div>
-              <div class="flex-1">
-                <h4 class="font-medium text-white">Lead Actor for Indie Feature</h4>
-                <p class="text-xs text-muted">Phantom Films | Mumbai</p>
-              </div>
-              <button class="btn-ghost border border-strong rounded-full px-3 py-1 text-xs">View</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- SAVED VIEW -->
-        <section data-view="saved" class="view hidden max-w-3xl mx-auto p-4 md:p-6">
-          <h2 class="text-2xl font-poppins font-bold mb-6">Saved Items</h2>
-          <div class="flex gap-4 border-b border-strong mb-6 overflow-x-auto hide-scrollbar">
-            <button class="tab-btn active" data-target="saved-posts">Posts</button>
-            <button class="tab-btn" data-target="saved-jobs">Jobs</button>
-            <button class="tab-btn" data-target="saved-profiles">Profiles</button>
-          </div>
-          <div id="saved-content">
-            <div class="glass-panel rounded-xl p-4 flex gap-4 mb-4">
-              <img src="https://picsum.photos/seed/saved1/200/200" class="w-20 h-20 rounded-lg object-cover">
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-1">
-                  <img src="https://picsum.photos/seed/aarav/50/50" class="w-6 h-6 rounded-full">
-                  <span class="text-sm font-medium text-white">Aarav Sharma</span>
-                </div>
-                <p class="text-xs text-muted line-clamp-2">Just wrapped up an amazing theatre workshop in Andheri! The energy was unreal...</p>
-                <span class="text-xs text-gold mt-1 inline-block">Saved 2 days ago</span>
-              </div>
-              <button class="text-gold hover:text-white">
-                <i data-lucide="bookmark" class="w-5 h-5 fill-current"></i>
-              </button>
-            </div>
-            <div class="glass-panel rounded-xl p-4 flex gap-4 mb-4">
-              <div class="w-20 h-20 rounded-lg bg-surface flex items-center justify-center text-gold">
-                <i data-lucide="briefcase" class="w-8 h-8"></i>
-              </div>
-              <div class="flex-1">
-                <h4 class="font-medium text-white mb-1">Lead Actor for Indie Feature</h4>
-                <p class="text-xs text-muted">Phantom Films | Mumbai, MH</p>
-                <span class="text-xs text-gold mt-1 inline-block">Saved 5 days ago</span>
-              </div>
-              <button class="text-gold hover:text-white">
-                <i data-lucide="bookmark" class="w-5 h-5 fill-current"></i>
-              </button>
-            </div>
-          </div>
+        <!-- DEAL ROOM (Detail/Messaging) -->
+        <section data-view="deal" class="view hidden max-w-3xl mx-auto p-4 md:p-6 overflow-y-auto h-full pb-32">
+          <div id="deal-room"></div>
         </section>
 
       </main>
 
-      <!-- BOTTOM NAV (Mobile) -->
-      <nav id="bottom-nav" class="md:hidden fixed bottom-0 w-full h-16 glass-panel border-t border-strong z-50 flex justify-around items-center pb-safe">
-        <a href="#stage" class="nav-item flex flex-col items-center text-muted hover:text-gold active">
-          <i data-lucide="home" class="w-6 h-6 mb-1"></i><span class="text-[10px]">Stage</span>
-        </a>
-        <a href="#network" class="nav-item flex flex-col items-center text-muted hover:text-gold">
-          <i data-lucide="users" class="w-6 h-6 mb-1"></i><span class="text-[10px]">Network</span>
-        </a>
-        <div class="nav-item -mt-6">
-          <button class="w-14 h-14 rounded-full bg-gold text-void flex items-center justify-center shadow-[0_4px_16px_rgba(197,160,89,0.5)] border-4 border-void" onclick="document.getElementById('post-composer').classList.remove('hidden')">
-            <i data-lucide="plus" class="w-6 h-6"></i>
+      <!-- BOTTOM NAV -->
+      <nav id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 w-full glass-panel border-t border-strong z-50 pb-safe">
+        <div class="bottom-nav__inner">
+          <a href="#stage" class="nav-item bottom-tab" data-tab="stage">
+            <i data-lucide="home"></i><span class="text-[10px] mt-1">Stage</span>
+          </a>
+          <a href="#explore" class="nav-item bottom-tab" data-tab="explore">
+            <i data-lucide="compass"></i><span class="text-[10px] mt-1">Discovery</span>
+          </a>
+
+          <div class="bottom-nav__spacer" aria-hidden="true"></div>
+
+          <a href="#deals-list" class="nav-item bottom-tab relative" data-tab="deals-list">
+            <i data-lucide="layers"></i><span class="text-[10px] mt-1">Deals</span>
+            <span id="notif-badge-mobile" class="badge hidden absolute -top-1 right-2">0</span>
+          </a>
+          <a href="#profile" class="nav-item bottom-tab" data-tab="profile">
+            <i data-lucide="user"></i><span class="text-[10px] mt-1">Profile</span>
+          </a>
+
+          <button id="create-fab" class="create-fab" aria-label="Post talent">
+            <i data-lucide="plus"></i>
           </button>
         </div>
-        <a href="#jobs" class="nav-item flex flex-col items-center text-muted hover:text-gold">
-          <i data-lucide="briefcase" class="w-6 h-6 mb-1"></i><span class="text-[10px]">Jobs</span>
-        </a>
-        <a href="#profile" class="nav-item flex flex-col items-center text-muted hover:text-gold">
-          <i data-lucide="user" class="w-6 h-6 mb-1"></i><span class="text-[10px]">Me</span>
-        </a>
       </nav>
 
     </div>
 
-    <!-- POST COMPOSER MODAL -->
+    <!-- MODALS -->
     <div id="post-composer" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-end md:items-center justify-center">
       <div class="bg-void w-full md:w-[600px] md:rounded-xl border border-strong flex flex-col max-h-[90vh] animate-slide-up">
         <div class="flex justify-between items-center p-4 border-b border-strong">
-          <h3 class="font-poppins font-semibold">Create Post</h3>
-          <button class="text-muted hover:text-white text-xl" onclick="document.getElementById('post-composer').classList.add('hidden')">✕</button>
+          <h3 class="font-poppins font-semibold">Post Talent Performance</h3>
+          <button id="close-composer-btn" class="text-muted hover:text-white text-xl">✕</button>
         </div>
-        <div class="p-4 flex-1 overflow-y-auto">
-          <textarea id="post-text" class="w-full bg-transparent border-none text-white resize-none outline-none min-h-[100px] text-lg" placeholder="What's on your mind?"></textarea>
-          <div id="post-media-preview" class="hidden mt-4 rounded-lg overflow-hidden border border-strong relative">
-            <button class="absolute top-2 right-2 bg-black/50 rounded-full w-8 h-8 flex items-center justify-center text-white" onclick="document.getElementById('post-media-preview').classList.add('hidden'); document.getElementById('post-file').value=''">✕</button>
-            <video id="post-video-preview" class="w-full hidden" controls></video>
-            <img id="post-image-preview" class="w-full hidden object-cover">
-          </div>
-        </div>
-        <div class="p-4 border-t border-strong flex justify-between items-center bg-surface">
-          <div class="flex gap-4">
-            <label class="cursor-pointer text-gold hover:text-white transition-colors flex items-center gap-2">
-              <span class="text-xl">📹</span> <span class="text-sm hidden md:inline">Media</span>
-              <input type="file" id="post-file" class="hidden" accept="video/*,image/*">
-            </label>
-          </div>
-          <button id="submit-post-btn" class="btn-gold px-6 py-2 rounded-full font-medium">Post ✦</button>
+        <div class="p-6">
+          <textarea id="post-text" class="w-full bg-transparent border border-strong rounded-xl text-white resize-none outline-none min-h-[120px] text-base p-4" placeholder="Describe the performance or role..."></textarea>
+          <button id="submit-post-btn" class="btn-gold w-full py-4 mt-6 rounded-full font-bold">Post Performance ✦</button>
         </div>
       </div>
     </div>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- HIRE MODAL -->
+    <div id="hire-modal" class="hidden fixed inset-0 z-[110] bg-black/80 backdrop-blur-sm flex items-end md:items-center justify-center p-4">
+      <div class="bg-void w-full md:w-[640px] md:rounded-3xl border border-gold/20 flex flex-col max-h-[90vh] animate-slide-up overflow-hidden">
+        <div class="p-6 border-b border-gold/10 bg-gold/5">
+          <h3 id="hire-modal-title" class="text-2xl font-poppins font-bold text-white">Hire Request</h3>
+          <p id="hire-target-sub" class="text-xs text-gold font-bold uppercase tracking-widest mt-1">Direct Recruitment</p>
+        </div>
+        
+        <div id="hire-actions" class="p-6 grid grid-cols-1 gap-4">
+          <button class="glass-panel p-5 text-left hover:bg-gold/10 transition-colors hire-action-btn rounded-2xl group" data-action="hire">
+            <div class="font-bold text-white text-lg group-hover:text-gold transition-colors">Start Paid Project</div>
+            <div class="text-xs text-muted mt-1 leading-relaxed">Verified hiring flow with status tracking and pro protection.</div>
+          </button>
+          <button class="glass-panel p-5 text-left hover:bg-white/5 transition-colors hire-action-btn rounded-2xl" data-action="collab">
+            <div class="font-bold text-white">Industry Collaboration</div>
+            <div class="text-xs text-muted mt-1">Propose a mutual project or portfolio expansion.</div>
+          </button>
+          <button class="glass-panel p-5 text-left hover:bg-white/5 transition-colors hire-action-btn rounded-2xl" data-action="message">
+            <div class="font-bold text-white">Inquiry</div>
+            <div class="text-xs text-muted mt-1">Send a professional inquiry or ask for availability.</div>
+          </button>
+        </div>
+
+        <form id="deal-form" class="hidden p-6">
+          <div class="space-y-4">
+            <input id="deal-projectTitle" class="input-field" placeholder="Project name">
+            <input id="deal-roleRequired" class="input-field" placeholder="Professional role (e.g. Lead Editor)">
+            <textarea id="deal-message" class="input-field" rows="3" placeholder="Project brief or message..."></textarea>
+          </div>
+          <div class="flex gap-3 mt-8">
+            <button type="button" id="deal-back-btn" class="btn-ghost px-6">Back</button>
+            <button type="submit" id="deal-submit-btn" class="btn-gold flex-1 py-4 font-bold rounded-full shadow-lg shadow-gold/20">Send Hire Request ✦</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="/vendor/lucide.min.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
-

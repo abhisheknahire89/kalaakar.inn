@@ -1,6 +1,7 @@
-import { createCreatorProfile, uploadAvatar } from '../auth.js';
+import { createCreatorProfile } from '../auth.js';
 import { navigateTo } from '../router.js';
 import { showToast } from '../components/toast.js';
+import { trackEvent, logError } from '../observability/telemetry.js';
 
 let currentStep = 1;
 const totalSteps = 4;
@@ -35,15 +36,6 @@ export function initOnboardingView() {
       profileData.primaryCraft = e.currentTarget.dataset.craft;
     });
   });
-
-  const videoInput = document.getElementById('ob-video');
-  if(videoInput) {
-    videoInput.addEventListener('change', (e) => {
-      if(e.target.files.length > 0) {
-        showToast('Video selected. It will be uploaded after setup.', 'success');
-      }
-    });
-  }
 
   document.getElementById('complete-onboarding-btn').addEventListener('click', handleComplete);
   
@@ -89,9 +81,13 @@ async function handleComplete() {
   
   if (result.success) {
     showToast('Profile created successfully! Welcome to Kalakar.', 'success');
+    trackEvent('onboarding_completed', { primaryCraft: profileData.primaryCraft, accountType: profileData.accountType });
+    // Guide the user to their first post immediately
+    localStorage.setItem('kalakar_open_composer_once', 'true');
     navigateTo('stage');
     import('../app.js').then(m => m.boot());
   } else {
+    logError(result.error, { area: 'onboarding_create_profile' });
     showToast(result.error, 'error');
     btn.disabled = false;
     btn.textContent = 'Complete Setup ✦';

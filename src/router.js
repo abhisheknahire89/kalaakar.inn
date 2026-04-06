@@ -1,19 +1,40 @@
-export function navigateTo(viewId) {
+let currentRouteState = null;
+
+export function getRouteState() {
+  return currentRouteState;
+}
+
+export function navigateTo(viewId, state = null) {
+  // Unknown routes should never strand the user on a blank screen
+  const hasTarget = !!document.querySelector(`[data-view="${viewId}"]`);
+  if (!hasTarget) {
+    const fallback = document.querySelector('[data-view="stage"]') ? 'stage' : 'login';
+    viewId = fallback;
+    state = null;
+    history.replaceState(null, null, `#${viewId}`);
+    renderView(viewId, null);
+    return;
+  }
+
+  if (window.location.hash !== `#${viewId}` || history.state !== state) {
+    history.pushState(state, null, `#${viewId}`);
+  }
+  renderView(viewId, state);
+}
+
+function renderView(viewId, state) {
+  currentRouteState = state || null;
+
   // Hide all views
   document.querySelectorAll('.view').forEach(el => {
     el.classList.add('hidden');
   });
 
-  // Update URL hash without triggering hashchange
-  if (window.location.hash !== `#${viewId}`) {
-    history.pushState(null, null, `#${viewId}`);
-  }
-
   // Show target view
   const targetView = document.querySelector(`[data-view="${viewId}"]`);
   if (targetView) {
     targetView.classList.remove('hidden');
-    
+
     // Manage App Shell visibility
     const appShell = document.getElementById('app-shell');
     if (['login', 'onboarding'].includes(viewId)) {
@@ -22,7 +43,7 @@ export function navigateTo(viewId) {
     } else {
       appShell.classList.remove('hidden');
       appShell.classList.add('flex');
-      
+
       // Update active nav links
       document.querySelectorAll('.nav-link, .nav-item').forEach(link => {
         link.classList.remove('active', 'text-gold');
@@ -35,14 +56,10 @@ export function navigateTo(viewId) {
 
   // Lazy load view logic
   if (viewId === 'stage') import('./views/stage.js').then(m => m.initStageView());
+  if (viewId === 'explore') import('./views/explore.js').then(m => m.initExploreView());
   if (viewId === 'profile') import('./views/profile.js').then(m => m.initProfileView());
-  if (viewId === 'network') import('./views/network.js').then(m => m.initNetworkView());
-  if (viewId === 'jobs') import('./views/jobs.js').then(m => m.initJobsView());
-  if (viewId === 'messages') import('./views/messages.js').then(m => m.initMessagesView());
-  if (viewId === 'notifications') import('./views/notifications.js').then(m => m.initNotificationsView());
-  if (viewId === 'settings') import('./views/settings.js').then(m => m.initSettingsView());
-  if (viewId === 'search') import('./views/search.js').then(m => m.initSearchView());
-  if (viewId === 'saved') import('./views/saved.js').then(m => m.initSavedView());
+  if (viewId === 'deals-list') import('./views/dealsView.js').then(m => m.initDealsListView());
+  if (viewId === 'deal') import('./views/dealRoom.js').then(m => m.initDealRoomView());
 }
 
 let routerInitialized = false;
@@ -50,8 +67,16 @@ let routerInitialized = false;
 export function initRouter() {
   if (routerInitialized) return;
   routerInitialized = true;
-  window.addEventListener('hashchange', () => {
+
+  const syncFromUrl = () => {
     const viewId = window.location.hash.replace('#', '') || 'stage';
-    navigateTo(viewId);
+    renderView(viewId, history.state);
+  };
+
+  window.addEventListener('hashchange', syncFromUrl);
+  // Back/forward navigation with history.pushState triggers popstate (not hashchange)
+  window.addEventListener('popstate', (e) => {
+    const viewId = window.location.hash.replace('#', '') || 'stage';
+    renderView(viewId, e.state);
   });
 }
