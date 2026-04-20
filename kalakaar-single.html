@@ -503,44 +503,9 @@
 
     <!-- App Frame -->
     <div class="frame" id="frame">
-      <!-- LOGIN -->
-      <section id="screen-login" class="screen" style="padding-bottom: 16px;">
-        <div class="login-hero">
-          <div class="brand-row">
-            <div class="brand-badge">K</div>
-            <div class="col">
-              <div class="h1">KALAKAAR</div>
-              <div class="cap">Where Talent Meets Opportunity</div>
-            </div>
-          </div>
-          <div class="h1" style="margin-top:8px;">Welcome to Kalakaar</div>
-          <div class="cap">Your stage. Your rules.</div>
-        </div>
+      <!-- LOGIN REMOVED: Guest mode only -->
 
-        <div class="login-card">
-          <button id="btn-google" class="btn google-btn tap" type="button">
-            <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#EA4335" d="M12 11.8v3.6h5.1c-.2 1.2-.9 2.2-1.9 2.9v2.4h3.1c1.8-1.6 2.9-4.1 2.9-6.9 0-.6-.1-1.1-.2-1.6H12z"/>
-              <path fill="#34A853" d="M12 24c2.6 0 4.8-.9 6.4-2.4l-3.1-2.4c-.9.6-2 .9-3.3.9-2.5 0-4.7-1.7-5.5-4.1H3.3v2.6C4.9 21.5 8.2 24 12 24z"/>
-              <path fill="#4A90E2" d="M6.5 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.3C2.5 9 2 10.9 2 12s.5 3 1.3 4.6l3.2-2.6z"/>
-              <path fill="#FBBC05" d="M12 4.8c1.4 0 2.6.5 3.6 1.4l2.7-2.7C16.8 1.3 14.6.4 12 .4 8.2.4 4.9 2.5 3.3 5.8l3.2 2.6c.8-2.4 3-4.1 5.5-4.1z"/>
-            </svg>
-            Continue with Google
-          </button>
-
-          <div class="divider">or</div>
-
-          <input id="email" class="input" type="email" placeholder="Enter your email" autocomplete="email" />
-          <div style="height:12px"></div>
-          <button id="btn-magic" class="btn btn-outline tap" type="button">Send Magic Link</button>
-
-          <div class="terms">
-            By continuing, you agree to Kalakaar’s Terms and Privacy Policy.
-          </div>
-        </div>
-      </section>
-
-      <!-- ONBOARDING -->
+      <!-- ONBOARDING (Optional from Profile) -->
       <section id="screen-onboarding" class="screen hidden">
         <div class="dots" aria-label="Onboarding progress">
           <div class="dot active" id="ob-dot-1"></div>
@@ -620,7 +585,7 @@
             <div class="brand-mini">K</div>
             <div class="col" style="gap:2px">
               <div style="font-weight:900;letter-spacing:2px;font-size:13px">KALAKAAR</div>
-              <div class="cap muted" id="top-sub">Stage</div>
+              <div class="cap muted" id="top-sub">Stage • Guest</div>
             </div>
             <div class="spacer"></div>
             <button class="icon-btn tap" id="btn-top-notifs" type="button" style="position:relative">
@@ -716,7 +681,7 @@
                     <div class="cap muted" id="me-loc">Mumbai</div>
                   </div>
                   <div class="cap" id="me-bio">New to Kalakaar — open to short films and collaborations.</div>
-                  <button id="btn-edit" class="btn btn-outline tap" type="button">✏️ Edit Profile</button>
+                  <button id="btn-edit" class="btn btn-outline tap" type="button">✨ Complete profile</button>
                 </div>
               </div>
               <div style="height:14px"></div>
@@ -767,8 +732,6 @@
                 <div class="h2">Settings</div>
                 <div style="height:10px"></div>
                 <button class="btn btn-ghost tap" id="btn-help" type="button">Help & Support</button>
-                <div style="height:10px"></div>
-                <button class="btn btn-danger tap" id="btn-logout" type="button">Logout</button>
               </div>
             </div>
           </div>
@@ -1109,7 +1072,7 @@
         };
 
         const showScreen = (id) => {
-          ['screen-login','screen-onboarding','screen-app','screen-user','screen-deal','screen-post'].forEach(x => {
+          ['screen-onboarding','screen-app','screen-user','screen-deal','screen-post'].forEach(x => {
             const el = document.getElementById(x);
             if (!el) return;
             el.classList.toggle('hidden', x !== id);
@@ -1788,32 +1751,40 @@
           }
         };
 
-        const logout = () => {
-          state.session.loggedIn = false;
-          toast('Logged out.', 'info');
-          showScreen('screen-login');
-        };
-
-        // Wiring: splash -> login
+        // Wiring: splash -> guest
         const start = () => {
           seedData();
           setTimeout(() => {
             $('#splash').classList.add('hidden');
-            showScreen('screen-login');
+            // Guest mode: go straight to app
+            state.session.loggedIn = true;
+            state.me = {
+              id: 'guest',
+              name: 'Guest',
+              role: 'Guest',
+              city: '—',
+              bio: 'You are browsing as a guest. Complete your profile to get hired.',
+            };
+            $('#me-name').textContent = state.me.name;
+            $('#me-role').textContent = state.me.role.toUpperCase();
+            $('#me-loc').textContent = state.me.city;
+            $('#me-bio').textContent = state.me.bio;
+            $('#me-ava').textContent = 'G';
+            $('#cmt-me').textContent = 'G';
+            showScreen('screen-app');
+            renderStageChips();
+            skeletonFeed();
+            renderExplore();
+            renderBadges();
+            setupProfileTabs();
+            setTimeout(() => {
+              renderFeed();
+              toast('Guest mode ✓ Tap “Complete profile” to create your identity.', 'info');
+            }, 1200);
           }, 2000);
         };
 
-        // Login actions
-        $('#btn-google').addEventListener('click', () => {
-          toast('Signed in ✓', 'success');
-          state.session.loggedIn = true;
-          showScreen('screen-onboarding');
-        });
-        $('#btn-magic').addEventListener('click', () => {
-          const email = ($('#email').value || '').trim();
-          if (!email || !email.includes('@')) return toast('Enter a valid email.', 'error');
-          toast('Check your inbox ✓', 'success');
-        });
+        // Login removed. Guest mode only.
 
         // Onboarding step 1
         $('#ob-roles').addEventListener('click', (e) => {
@@ -1966,9 +1937,9 @@
         $('#notifs-mark').addEventListener('click', markAllRead);
 
         // Profile actions
-        $('#btn-edit').addEventListener('click', () => toast('Edit profile (demo).', 'info'));
+        $('#btn-edit').addEventListener('click', () => showScreen('screen-onboarding'));
         $('#btn-help').addEventListener('click', () => toast('Support: help@kalakaar.in (demo)', 'info'));
-        $('#btn-logout').addEventListener('click', logout);
+        // Guest-only build: no logout (no login screen).
 
         // Modal overlay close via escape
         window.addEventListener('keydown', (e) => {
@@ -2006,4 +1977,3 @@
     </script>
   </body>
 </html>
-
