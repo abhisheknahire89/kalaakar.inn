@@ -17,6 +17,21 @@ export async function initDealsListView() {
     container.innerHTML = `<div class="text-center text-muted py-20 px-6">Sign in to manage your professional deals.</div>`;
     return;
   }
+  if (currentUser.$id === 'guest') {
+    container.innerHTML = `
+      <div class="flex flex-col items-center justify-center py-24 text-center px-6">
+        <div class="w-20 h-20 rounded-full bg-surface border border-gold/10 flex items-center justify-center text-gold mb-6 opacity-40">
+          <i data-lucide="briefcase" class="w-9 h-9"></i>
+        </div>
+        <h3 class="text-white font-bold text-xl mb-2">Guest Mode</h3>
+        <p class="text-sm text-muted max-w-sm">Deals are disabled in guest mode. Complete onboarding and sign in to send hire requests.</p>
+        <button id="deals-empty-explore" class="btn-gold px-10 py-3 rounded-full font-bold mt-8 shadow-lg shadow-gold/20">Explore Talent ✦</button>
+      </div>
+    `;
+    if (window.lucide) window.lucide.createIcons();
+    bindDealsActions(container);
+    return;
+  }
 
   container.innerHTML = `<div class="text-center text-muted py-20 animate-pulse">Syncing briefcase...</div>`;
 

@@ -1,10 +1,20 @@
 import { databases, DATABASE_ID, COLLECTIONS, Query, ID, storage, BUCKETS } from '../appwriteClient.js';
 import { Permission, Role } from 'appwrite';
+import { isGuestMode } from '../utils/guestMode.js';
+import { addGuestPost, getGuestFeedPosts } from './guestData.js';
 
 /**
  * List posts with optional filters for Search/Explore.
  */
 export async function listFilteredPosts({ search = '', type = '', limit = 20 } = {}) {
+  if (isGuestMode()) {
+    const all = getGuestFeedPosts();
+    const q = (search || '').toLowerCase();
+    return all
+      .filter((p) => (type && type !== 'all' ? (p.postType || '').toLowerCase() === type : true))
+      .filter((p) => (q ? String(p.content || '').toLowerCase().includes(q) : true))
+      .slice(0, limit);
+  }
   const queries = [Query.orderDesc('$createdAt'), Query.limit(limit)];
   
   if (search) queries.push(Query.search('content', search));
@@ -23,6 +33,7 @@ export async function listFilteredPosts({ search = '', type = '', limit = 20 } =
  * Increment the view count for a post.
  */
 export async function incrementPostView(postId) {
+  if (isGuestMode()) return;
   try {
     // Note: This requires a 'viewCount' attribute in the Posts collection.
     // If it doesn't exist, this will fail silently.
@@ -37,15 +48,16 @@ export async function incrementPostView(postId) {
 }
 
 export async function listFeedPosts({ limit = 10 } = {}) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.POSTS, [
-    Query.orderDesc('$createdAt'),
-    Query.limit(limit),
-  ]);
+  if (isGuestMode()) return getGuestFeedPosts().slice(0, limit);
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.POSTS, [Query.orderDesc('$createdAt'), Query.limit(limit)]);
   return result.documents;
 }
 
 export async function listCreatorPosts(userId, { limit = 15 } = {}) {
   if (!userId) return [];
+  if (isGuestMode()) {
+    return getGuestFeedPosts().filter((p) => p.authorId === userId).slice(0, limit);
+  }
 
   const tryField = async (field) => {
     const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.POSTS, [
@@ -73,6 +85,7 @@ export async function listCreatorPosts(userId, { limit = 15 } = {}) {
 
 export async function uploadPostMedia(file) {
   if (!file) throw new Error('Missing file');
+  if (isGuestMode()) throw new Error('Media upload is disabled in guest mode.');
   const res = await storage.createFile(BUCKETS.POSTS_MEDIA, ID.unique(), file);
   return { fileId: res.$id };
 }
@@ -96,6 +109,27 @@ export async function createPost({
   if (!content?.trim()) throw new Error('Post content is empty');
   if (!['video', 'image', 'text'].includes(postType)) throw new Error('Invalid postType');
   if ((postType === 'video' || postType === 'image') && !mediaFileId) throw new Error('Missing media');
+
+  if (isGuestMode()) {
+    if (postType !== 'text') throw new Error('Only text posts are available in guest mode.');
+    const doc = {
+      $id: `p_guest_${Date.now()}`,
+      authorId,
+      authorName: 'Guest',
+      authorHeadline: 'Guest',
+      authorAvatar: '',
+      postType,
+      content: content.trim(),
+      mediaFileId: '',
+      mediaUrl: '',
+      applaudCount: 0,
+      commentCount: 0,
+      viewCount: 0,
+      $createdAt: new Date().toISOString(),
+    };
+    addGuestPost(doc);
+    return doc;
+  }
 
   const permissions = [
     Permission.read(Role.users()),

@@ -1,7 +1,9 @@
 import { client, databases, DATABASE_ID, COLLECTIONS, Query } from '../appwriteClient.js';
 import { showToast } from '../components/toast.js';
+import { isGuestMode } from '../utils/guestMode.js';
 
 export async function initNotificationListener(userId, { onUnreadChange } = {}) {
+  if (isGuestMode()) return { close() {} };
   const sub = await client.subscribe(`databases.${DATABASE_ID}.collections.${COLLECTIONS.NOTIFICATIONS}.documents`, response => {
     if (response.events.includes('databases.*.collections.*.documents.*.create')) {
       const notif = response.payload;
@@ -15,6 +17,14 @@ export async function initNotificationListener(userId, { onUnreadChange } = {}) 
 }
 
 export async function fetchUnreadCount(userId, { onUnreadChange } = {}) {
+  if (isGuestMode()) {
+    onUnreadChange?.(0);
+    const badge = document.getElementById('notif-badge');
+    const badgeMobile = document.getElementById('notif-badge-mobile');
+    badge?.classList.add('hidden');
+    badgeMobile?.classList.add('hidden');
+    return;
+  }
   try {
     const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.NOTIFICATIONS, [
       Query.equal('userId', userId),

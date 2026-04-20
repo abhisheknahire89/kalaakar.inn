@@ -12,6 +12,12 @@ let currentDeal = null;
 export async function initDealRoomView() {
   const container = document.getElementById('deal-room');
   if (!container) return;
+  if (currentUser?.$id === 'guest') {
+    container.innerHTML = emptyState('Guest mode does not support deal rooms. Complete onboarding to unlock hiring chat.');
+    if (window.lucide) window.lucide.createIcons();
+    container.querySelector('#deal-empty-back')?.addEventListener('click', () => navigateTo('stage'), { once: true });
+    return;
+  }
 
   const state = getRouteState() || {};
   const dealId = state.dealId;

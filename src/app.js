@@ -9,6 +9,7 @@ import { initPostComposer } from './components/postComposer.js';
 import { logError, trackEvent } from './observability/telemetry.js';
 import { validateAppwriteMvp } from './appwriteValidation.js';
 import { openComposer } from './domBindings.js';
+import { enableGuestMode, getGuestProfile, getGuestUser, isGuestMode, disableGuestMode } from './utils/guestMode.js';
 
 export let currentUser = null;
 export let currentProfile = null;
@@ -53,18 +54,29 @@ export async function boot() {
   }
   
   // 3. Check auth & profile state in one go
-  const session = await checkSession();
+  let session = null;
+  try {
+    session = await checkSession();
+  } catch (error) {
+    session = { user: null, profile: null, onboardingRequired: false, error };
+  }
   currentUser = session.user;
   currentProfile = session.profile;
 
   scheduleHideSplash();
 
   if (!currentUser) {
-    navigateTo('login');
-    initLoginView();
+    // Guest-only fallback (Google auth issues / MVP demo)
+    enableGuestMode();
+    currentUser = getGuestUser();
+    currentProfile = getGuestProfile();
+    await initMainApp();
     bootInProgress = false;
     return;
   }
+
+  // Ensure guest flag doesn't affect real sessions
+  disableGuestMode();
 
   if (session.onboardingRequired) {
     navigateTo('onboarding');
@@ -85,12 +97,14 @@ export async function boot() {
     return;
   }
 
-  // Validate Appwrite access for MVP collections/permissions
-  try {
-    await validateAppwriteMvp({ userId: currentUser.$id });
-  } catch {
-    bootInProgress = false;
-    return;
+  if (!isGuestMode()) {
+    // Validate Appwrite access for MVP collections/permissions
+    try {
+      await validateAppwriteMvp({ userId: currentUser.$id });
+    } catch {
+      bootInProgress = false;
+      return;
+    }
   }
 
   await initMainApp();
@@ -117,8 +131,12 @@ async function initMainApp() {
 
   // Reset per-session resources (logout/login without hard refresh must keep working)
   await teardownSessionResources();
-  await setupRealtimeListeners(currentUser.$id);
-  fetchUnreadCount(currentUser.$id);
+  if (!isGuestMode()) {
+    await setupRealtimeListeners(currentUser.$id);
+    fetchUnreadCount(currentUser.$id);
+  } else {
+    fetchUnreadCount(currentUser.$id); // will no-op in guest mode
+  }
 
   postComposerCleanup?.();
   postComposerCleanup = initPostComposer({ user: currentUser, profile: currentProfile });

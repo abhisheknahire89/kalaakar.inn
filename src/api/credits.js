@@ -1,7 +1,9 @@
 import { databases, DATABASE_ID, COLLECTIONS, Query } from '../appwriteClient.js';
+import { isGuestMode } from '../utils/guestMode.js';
 
 export async function listCreatorCredits(userId, { limit = 20 } = {}) {
   if (!userId) return [];
+  if (isGuestMode()) return [];
 
   const tryField = async (field) => {
     const res = await databases.listDocuments(DATABASE_ID, COLLECTIONS.CREDITS, [
@@ -26,4 +28,3 @@ export async function listCreatorCredits(userId, { limit = 20 } = {}) {
     }
   }
 }
-

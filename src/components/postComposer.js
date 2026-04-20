@@ -2,6 +2,7 @@ import { showToast } from './toast.js';
 import { createPost, uploadPostMedia } from '../api/posts.js';
 import { trackEvent, logError } from '../observability/telemetry.js';
 import { closeComposer } from '../domBindings.js';
+import { isGuestMode } from '../utils/guestMode.js';
 
 export function initPostComposer({ user } = {}) {
   const submitBtn = document.getElementById('submit-post-btn');
@@ -157,7 +158,17 @@ export function initPostComposer({ user } = {}) {
   submitBtn.addEventListener('click', onSubmit);
 
   // Default to video-first
-  setType('video');
+  if (isGuestMode()) {
+    // Guest mode: keep MVP usable without Appwrite media permissions.
+    typeButtons.forEach((b) => {
+      const t = b.dataset.type;
+      b.classList.toggle('hidden', t !== 'text');
+    });
+    setType('text');
+    showToast('Guest mode: text-only posts.', 'neutral');
+  } else {
+    setType('video');
+  }
 
   return () => {
     submitBtn.removeEventListener('click', onSubmit);
@@ -166,4 +177,3 @@ export function initPostComposer({ user } = {}) {
     if (objectUrl) URL.revokeObjectURL(objectUrl);
   };
 }
-

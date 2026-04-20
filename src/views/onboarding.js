@@ -2,6 +2,7 @@ import { createCreatorProfile, uploadAvatar } from '../auth.js';
 import { navigateTo } from '../router.js';
 import { showToast } from '../components/toast.js';
 import { trackEvent, logError } from '../observability/telemetry.js';
+import { isGuestMode, setGuestProfile, getGuestProfile } from '../utils/guestMode.js';
 
 let currentStep = 1;
 const totalSteps = 4;
@@ -91,8 +92,29 @@ async function handleComplete() {
     btn.textContent = 'Setting up...';
   }
 
+  if (isGuestMode()) {
+    const existing = getGuestProfile();
+    const next = {
+      ...existing,
+      name: profileData.name || existing.name,
+      city: profileData.city || existing.city,
+      state: profileData.state || existing.state,
+      primaryCraft: profileData.primaryCraft || existing.primaryCraft,
+      accountType: profileData.accountType || existing.accountType,
+      yearsExperience: Number(profileData.yearsExperience || existing.yearsExperience || 0),
+      avatarFileId: '',
+    };
+    setGuestProfile(next);
+    showToast('Guest profile saved ✓', 'success');
+    trackEvent('onboarding_completed', { mode: 'guest', primaryCraft: next.primaryCraft, accountType: next.accountType });
+    localStorage.setItem('kalakar_open_composer_once', 'true');
+    navigateTo('stage');
+    import('../app.js').then(m => m.boot());
+    return;
+  }
+
   const result = await createCreatorProfile(profileData);
-  
+
   if (result.success) {
     showToast('Profile created successfully! Welcome to Kalakar.', 'success');
     trackEvent('onboarding_completed', { primaryCraft: profileData.primaryCraft, accountType: profileData.accountType });
@@ -120,6 +142,10 @@ function syncExperienceLabel() {
 async function handleAvatarSelect(e) {
   const file = e.target?.files?.[0];
   if (!file) return;
+  if (isGuestMode()) {
+    showToast('Avatar upload is disabled in guest mode.', 'neutral');
+    return;
+  }
 
   const preview = document.getElementById('ob-avatar-preview');
   try {

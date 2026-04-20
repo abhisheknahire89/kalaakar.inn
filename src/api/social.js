@@ -1,11 +1,31 @@
 import { databases, ID, Query, DATABASE_ID, COLLECTIONS } from '../appwriteClient.js';
 import { currentUser } from '../app.js';
+import { GUEST_SAVED_KEY } from '../utils/guestMode.js';
+
+function readGuestSaved() {
+  try {
+    const raw = localStorage.getItem(GUEST_SAVED_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeGuestSaved(list) {
+  try {
+    localStorage.setItem(GUEST_SAVED_KEY, JSON.stringify(list || []));
+  } catch {
+    // ignore
+  }
+}
 
 /**
  * Follow a user.
  */
 export async function followUser(targetId) {
   if (!currentUser?.$id) throw new Error('Sign in to follow creators.');
+  if (currentUser.$id === 'guest') throw new Error('Complete onboarding to follow creators.');
   
   try {
     return await databases.createDocument(DATABASE_ID, COLLECTIONS.CONNECTIONS, ID.unique(), {
@@ -25,6 +45,7 @@ export async function followUser(targetId) {
  */
 export async function unfollowUser(targetId) {
   if (!currentUser?.$id) return;
+  if (currentUser.$id === 'guest') return;
   
   try {
     const existing = await databases.listDocuments(DATABASE_ID, COLLECTIONS.CONNECTIONS, [
@@ -46,6 +67,7 @@ export async function unfollowUser(targetId) {
  */
 export async function isFollowing(targetId) {
   if (!currentUser?.$id) return false;
+  if (currentUser.$id === 'guest') return false;
   try {
     const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.CONNECTIONS, [
       Query.equal('followerId', currentUser.$id),
@@ -63,6 +85,12 @@ export async function isFollowing(targetId) {
  */
 export async function savePost(postId) {
   if (!currentUser?.$id) throw new Error('Sign in to save posts.');
+  if (currentUser.$id === 'guest') {
+    const list = readGuestSaved();
+    if (!list.includes(postId)) list.unshift(postId);
+    writeGuestSaved(list.slice(0, 200));
+    return { $id: `guest_save_${postId}` };
+  }
   
   try {
     return await databases.createDocument(DATABASE_ID, COLLECTIONS.SAVED_ITEMS, ID.unique(), {
@@ -82,6 +110,11 @@ export async function savePost(postId) {
  */
 export async function unsavePost(postId) {
   if (!currentUser?.$id) return;
+  if (currentUser.$id === 'guest') {
+    const list = readGuestSaved().filter((x) => x !== postId);
+    writeGuestSaved(list);
+    return;
+  }
   
   try {
     const existing = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SAVED_ITEMS, [
@@ -103,6 +136,9 @@ export async function unsavePost(postId) {
  */
 export async function listSavedPosts() {
   if (!currentUser?.$id) return [];
+  if (currentUser.$id === 'guest') {
+    return readGuestSaved().map((id) => ({ itemId: id }));
+  }
   
   try {
     const saved = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SAVED_ITEMS, [

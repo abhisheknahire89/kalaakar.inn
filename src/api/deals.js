@@ -1,5 +1,6 @@
 import { client, databases, DATABASE_ID, COLLECTIONS, ID, Query } from '../appwriteClient.js';
 import { Permission, Role } from 'appwrite';
+import { isGuestMode } from '../utils/guestMode.js';
 
 export const DEAL_STATUS = {
   REQUESTED: 'requested',
@@ -21,6 +22,7 @@ export async function createDeal({
   budget = '',
   message = '',
 } = {}) {
+  if (isGuestMode()) throw new Error('Guest mode: deals are disabled.');
   if (!creatorId) throw new Error('Missing creatorId');
   if (!scoutId) throw new Error('Missing scoutId');
 
@@ -55,10 +57,12 @@ export async function createDeal({
 }
 
 export async function getDeal(dealId) {
+  if (isGuestMode()) throw new Error('Guest mode: deals are disabled.');
   return databases.getDocument(DATABASE_ID, COLLECTIONS.DEALS, dealId);
 }
 
 export async function updateDealStatus(dealId, status) {
+  if (isGuestMode()) throw new Error('Guest mode: deals are disabled.');
   try {
     return await databases.updateDocument(DATABASE_ID, COLLECTIONS.DEALS, dealId, { status });
   } catch (error) {
@@ -67,6 +71,7 @@ export async function updateDealStatus(dealId, status) {
 }
 
 export async function listDealMessages(dealId, { limit = 50 } = {}) {
+  if (isGuestMode()) throw new Error('Guest mode: deals are disabled.');
   try {
     const res = await databases.listDocuments(DATABASE_ID, COLLECTIONS.MESSAGES, [
       Query.equal('dealId', dealId),
@@ -80,6 +85,7 @@ export async function listDealMessages(dealId, { limit = 50 } = {}) {
 }
 
 export async function sendDealMessage({ dealId, senderId, text, participantIds }) {
+  if (isGuestMode()) throw new Error('Guest mode: chat is disabled.');
   if (!dealId) throw new Error('Missing dealId');
   if (!senderId) throw new Error('Missing senderId');
   if (!text?.trim()) throw new Error('Empty message');
@@ -103,6 +109,7 @@ export async function sendDealMessage({ dealId, senderId, text, participantIds }
 }
 
 export async function subscribeDealMessages(dealId, callback) {
+  if (isGuestMode()) return { close() {} };
   return client.subscribe(`databases.${DATABASE_ID}.collections.${COLLECTIONS.MESSAGES}.documents`, (evt) => {
     const payload = evt.payload;
     if (payload?.dealId === dealId) callback(evt);

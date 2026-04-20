@@ -226,15 +226,34 @@ function renderPostShell({
 }) {
   const isVideo = postType === 'video';
   const isImage = postType === 'image';
+  const hasMedia = !!mediaUrl;
   
   return `
     <article class="post-outer" data-post-id="${postId}">
       <!-- Media Layer -->
       <div class="post-media-container">
         ${isVideo ? `
-          <video class="post-video" src="${mediaUrl}" loop playsinline muted autoplay></video>
+          ${hasMedia ? `
+            <video class="post-video" src="${mediaUrl}" loop playsinline muted autoplay></video>
+          ` : `
+            <div class="w-full h-full flex items-center justify-center bg-surface">
+              <div class="flex flex-col items-center gap-2 opacity-70">
+                <i data-lucide="play-circle" class="w-12 h-12 text-gold"></i>
+                <div class="text-xs text-muted">Video preview (guest)</div>
+              </div>
+            </div>
+          `}
         ` : isImage ? `
-          <img class="w-full h-full object-cover" src="${mediaUrl}" alt="Post">
+          ${hasMedia ? `
+            <img class="w-full h-full object-cover" src="${mediaUrl}" alt="Post">
+          ` : `
+            <div class="w-full h-full flex items-center justify-center bg-surface">
+              <div class="flex flex-col items-center gap-2 opacity-70">
+                <i data-lucide="image" class="w-12 h-12 text-gold"></i>
+                <div class="text-xs text-muted">Image preview (guest)</div>
+              </div>
+            </div>
+          `}
         ` : `
           <div class="w-full h-full flex items-center justify-center p-8 bg-surface">
             <p class="text-xl font-medium text-center leading-relaxed">"${escapeHtml(postText)}"</p>

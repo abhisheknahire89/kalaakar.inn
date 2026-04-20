@@ -1,8 +1,10 @@
 import { databases, DATABASE_ID, COLLECTIONS, ID, Query } from '../appwriteClient.js';
 import { Permission, Role } from 'appwrite';
+import { isGuestMode } from '../utils/guestMode.js';
 
 export async function listCreatorVouches(userId, { limit = 12 } = {}) {
   if (!userId) return [];
+  if (isGuestMode()) return [];
   try {
     const res = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VOUCHES, [
       Query.equal('creatorId', userId),
@@ -16,6 +18,7 @@ export async function listCreatorVouches(userId, { limit = 12 } = {}) {
 }
 
 export async function createVouchAndUpdateReliability({ creatorId, scoutId, dealId, rating = 5, note = '' } = {}) {
+  if (isGuestMode()) throw new Error('Guest mode: vouching is disabled.');
   if (!creatorId || !scoutId || !dealId) throw new Error('Missing vouch fields');
 
   const permissions = [

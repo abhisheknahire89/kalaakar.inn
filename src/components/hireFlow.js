@@ -128,6 +128,12 @@ async function submitDeal() {
     showToast('Please sign in to continue.', 'warning');
     return;
   }
+  if (currentUser.$id === 'guest') {
+    showToast('Guest mode: complete onboarding to send hire requests.', 'neutral');
+    closeHireModal();
+    navigateTo('onboarding');
+    return;
+  }
 
   const projectTitle = (document.getElementById('deal-projectTitle')?.value || '').trim();
   const roleRequired = (document.getElementById('deal-roleRequired')?.value || '').trim();
