@@ -8,6 +8,7 @@ import { escapeHtml, safeUrl } from '../utils/escapeHtml.js';
 import { openHireFlow } from '../components/hireFlow.js';
 import { showToast } from '../components/toast.js';
 import { followUser, unfollowUser, isFollowing } from '../api/social.js';
+import { logout } from '../auth.js';
 
 let profileBound = false;
 
@@ -89,7 +90,7 @@ function renderProfessionalPortfolio(container, profile, posts, vouches, credits
               <button class="btn-ghost border border-white/10 px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold/5 js-vouch" data-user-id="${escapeHtml(creatorUserId)}">Vouch</button>
             </div>
           ` : `
-            <button id="edit-profile-btn" class="btn-ghost border border-gold/30 text-gold px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest">Update Credentials</button>
+            <button id="profile-logout-btn" class="btn-ghost border border-red-500/30 text-red-400 px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest">Sign Out</button>
           `}
         </div>
       </div>
@@ -182,6 +183,11 @@ function renderVouchCard(v) {
 
 function bindPortfolioActions(container) {
   container.addEventListener('click', (e) => {
+    if (e.target?.id === 'profile-logout-btn') {
+      handleLogout();
+      return;
+    }
+
     const hireBtn = e.target.closest('.js-hire-main');
     if (hireBtn) {
       const creatorId = hireBtn.getAttribute('data-user-id');
@@ -222,6 +228,17 @@ function bindPortfolioActions(container) {
       navigateTo('stage');
     }
   });
+}
+
+async function handleLogout() {
+  try {
+    await logout();
+  } catch {
+    // ignore
+  } finally {
+    window.location.hash = 'login';
+    window.location.reload();
+  }
 }
 
 async function toggleFollow(btn, targetId) {
